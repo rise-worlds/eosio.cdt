@@ -90,11 +90,6 @@ if [ "$ARCH" == "Linux" ]; then
    if [ -z $CMAKE ]; then export CMAKE=$ROOT_LOCATION/bin/cmake; fi
    export OS_NAME=$( cat /etc/os-release | grep ^NAME | cut -d'=' -f2 | sed 's/\"//gI' )
    case "$OS_NAME" in
-      "Amazon Linux AMI"|"Amazon Linux")
-         FILE="./scripts/eosiocdt_build_amazon.sh"
-         CXX_COMPILER=g++
-         C_COMPILER=gcc
-      ;;
       "CentOS Linux")
          FILE="${REPO_ROOT}/scripts/eosiocdt_build_centos.sh"
          CXX_COMPILER=g++
@@ -102,24 +97,12 @@ if [ "$ARCH" == "Linux" ]; then
       ;;
       "elementary OS")
          FILE="${REPO_ROOT}/scripts/eosiocdt_build_ubuntu.sh"
-         CXX_COMPILER=clang++-4.0
-         C_COMPILER=clang-4.0
-      ;;
-      "Fedora")
-         FILE="${REPO_ROOT}/scripts/eosiocdt_build_fedora.sh"
-         CXX_COMPILER=g++
-         C_COMPILER=gcc
       ;;
       "Linux Mint")
          FILE="${REPO_ROOT}/scripts/eosiocdt_build_ubuntu.sh"
       ;;
       "Ubuntu")
          FILE="${REPO_ROOT}/scripts/eosiocdt_build_ubuntu.sh"
-      ;;
-      "Debian GNU/Linux")
-         FILE="${REPO_ROOT}/scripts/eosiocdt_build_ubuntu.sh"
-         CXX_COMPILER=clang++-4.0
-         C_COMPILER=clang-4.0
       ;;
       *)
          printf "\\nUnsupported Linux Distribution. Exiting now.\\n\\n"
