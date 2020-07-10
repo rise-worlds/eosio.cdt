@@ -35,12 +35,8 @@ case "${OS_NAME}" in
 			printf "You must be running Linux Mint 18.x or higher to install EOSIO.\\n"
 			printf "Exiting now.\\n"
 			exit 1
-		elif [ "${OS_MAJ}" -le 18 ]; then 
-			LLVM_DEP_ARRAY=(llvm-4.0 clang-4.0 libclang-4.0-dev)
-			export CXX_COMPILER=clang++-4.0
-			export C_COMPILER=clang-4.0
-		elif [ "${OS_MAJ}" -gt 18 ]; then
-			LLVM_DEP_ARRAY=(llvm-10 clang-10 libclang-10-dev cmake)
+		else
+			LLVM_DEP_ARRAY=(llvm-10 clang-10 llvm-10-dev libclang-10-dev cmake)
 			export CXX_COMPILER=clang++-10
 			export C_COMPILER=clang-10
 		fi
@@ -50,26 +46,11 @@ case "${OS_NAME}" in
 			printf "You must be running Ubuntu 18.04.x or higher to install EOSIO.\\n"
 			printf "Exiting now.\\n"
 			exit 1
-		elif [ "${OS_MAJ}" -le 18 ]; then 
-			LLVM_DEP_ARRAY=(llvm-4.0 clang-4.0 libclang-4.0-dev)
-			export CXX_COMPILER=clang++-4.0
-			export C_COMPILER=clang-4.0
-		elif [ "${OS_MAJ}" -gt 18 ]; then
-			LLVM_DEP_ARRAY=(llvm-10 clang-10 libclang-10-dev cmake)
+		else
+			LLVM_DEP_ARRAY=(llvm-10 clang-10 llvm-10-dev libclang-10-dev cmake)
 			export CXX_COMPILER=clang++-10
 			export C_COMPILER=clang-10
 		fi
-		# UBUNTU 18 doesn't have MONGODB 3.6.3
-		export MONGODB_VERSION=4.1.1
-		# We have to re-set this with the new version
-		export MONGODB_ROOT=${OPT_LOCATION}/mongodb-${MONGODB_VERSION}
-	;;
-	"Debian")
-		if [ $OS_MAJ -lt 10 ]; then
-			printf "You must be running Debian 10 to install EOSIO, and resolve missing dependencies from unstable (sid).\n"
-			printf "Exiting now.\n"
-			exit 1
-	fi
 	;;
 esac
 

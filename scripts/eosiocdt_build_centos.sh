@@ -95,36 +95,68 @@ else
 	printf " - ${SCL} found.\\n"
 fi
 
-printf "Checking installation of devtoolset-7...\\n"
-DEVTOOLSET=$( rpm -qa | grep -E 'devtoolset-7-[0-9].*' )
+printf "Checking installation of devtoolset-8...\\n"
+DEVTOOLSET=$( rpm -qa | grep -E 'devtoolset-8-[0-9].*' )
 if [ -z "${DEVTOOLSET}" ]; then
-	printf "Do you wish to install devtoolset-7?\\n"
+	printf "Do you wish to install devtoolset-8?\\n"
 	select yn in "Yes" "No"; do
 		case $yn in
 			[Yy]* )
-				printf "Installing devtoolset-7...\\n"
-				if ! sudo $YUM install -y devtoolset-7 2>/dev/null; then
-						printf "!! Centos devtoolset-7 installation failed !!\\n"
+				printf "Installing devtoolset-8...\\n"
+				if ! sudo $YUM install -y devtoolset-8 2>/dev/null; then
+						printf "!! Centos devtoolset-8 installation failed !!\\n"
 						printf "Exiting now.\\n"
 						exit 1;
 				else
 						printf "Centos devtoolset installed successfully.\\n"
 				fi
 			break;;
-			[Nn]* ) echo "User aborting installation of devtoolset-7. Exiting now."; exit;;
+			[Nn]* ) echo "User aborting installation of devtoolset-8. Exiting now."; exit;;
 			* ) echo "Please type 1 for yes or 2 for no.";;
 		esac
 	done
 else
 	printf " - ${DEVTOOLSET} found.\\n"
 fi
-printf "Enabling Centos devtoolset-7...\\n"
-if ! source "/opt/rh/devtoolset-7/enable" 2>/dev/null; then
-	printf "!! Unable to enable Centos devtoolset-7 at this time !!\\n"
+printf "Enabling Centos devtoolset-8...\\n"
+if ! source "/opt/rh/devtoolset-8/enable" 2>/dev/null; then
+	printf "!! Unable to enable Centos devtoolset-8 at this time !!\\n"
 	printf "Exiting now.\\n\\n"
 	exit 1;
 fi
-printf "Centos devtoolset-7 successfully enabled.\\n"
+printf "Centos devtoolset-8 successfully enabled.\\n"
+
+
+printf "Checking installation of llvm-toolset-7.0...\\n"
+DEVLLVMTOOLSET=$( rpm -qa | grep -E 'llvm-toolset-7.0-[0-9].*' )
+if [ -z "${DEVLLVMTOOLSET}" ]; then
+	printf "Do you wish to install llvm-toolset-7.0?\\n"
+	select yn in "Yes" "No"; do
+		case $yn in
+			[Yy]* )
+				printf "Installing llvm-toolset-7.0...\\n"
+				if ! sudo $YUM install -y llvm-toolset-7.0 2>/dev/null; then
+						printf "!! Centos llvm-toolset-7.0 installation failed !!\\n"
+						printf "Exiting now.\\n"
+						exit 1;
+				else
+						printf "Centos llvm-toolset installed successfully.\\n"
+				fi
+			break;;
+			[Nn]* ) echo "User aborting installation of llvm-toolset-7.0. Exiting now."; exit;;
+			* ) echo "Please type 1 for yes or 2 for no.";;
+		esac
+	done
+else
+	printf " - ${DEVLLVMTOOLSET} found.\\n"
+fi
+printf "Enabling Centos llvm-toolset-7.0...\\n"
+if ! source "/opt/rh/llvm-toolset-7.0/enable" 2>/dev/null; then
+	printf "!! Unable to enable Centos llvm-toolset-7.0 at this time !!\\n"
+	printf "Exiting now.\\n\\n"
+	exit 1;
+fi
+printf "Centos llvm-toolset-7.0 successfully enabled.\\n"
 
 printf "\\n"
 
@@ -132,7 +164,7 @@ DEP_ARRAY=(
 	git autoconf automake libtool make bzip2 \
 	bzip2-devel openssl-devel gmp-devel \
 	ocaml libicu-devel python python-devel python33 \
-	gettext-devel file sudo
+	gettext-devel file sudo rpm-build llvm-toolset-7.0-cmake
 )
 COUNT=1
 DISPLAY=""
