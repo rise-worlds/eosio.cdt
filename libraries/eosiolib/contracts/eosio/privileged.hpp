@@ -40,7 +40,7 @@ namespace eosio {
          int64_t set_standby_producers( char * producer_data, uint32_t producer_data_size );
 
          __attribute__((eosio_wasm_import))
-         bool enable_standby_producers();
+         int64_t enable_standby_producers();
       }
    }
 
@@ -250,7 +250,7 @@ namespace eosio {
       return {};
    }
 
-   inline bool enable_standby_producers() {
+   inline int64_t enable_standby_producers() {
       return internal_use_do_not_use::enable_standby_producers();
    }
 

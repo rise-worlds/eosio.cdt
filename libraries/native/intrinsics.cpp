@@ -31,7 +31,7 @@ extern "C" {
    int64_t set_standby_producers( char *producer_data, uint32_t producer_data_size ) {
       return intrinsics::get().call<intrinsics::set_standby_producers>(producer_data, producer_data_size);
    }
-   bool enable_standby_producers() {
+   int64_t enable_standby_producers() {
       return intrinsics::get().call<intrinsics::enable_standby_producers>();
    }
    uint32_t get_blockchain_parameters_packed( char* data, uint32_t datalen ) {
