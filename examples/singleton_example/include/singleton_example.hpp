@@ -24,6 +24,6 @@ class [[eosio::contract]] singleton_example : public contract {
       using singleton_type = eosio::singleton<"testtable"_n, testtable>;
       singleton_type singleton_instance;
 
-      using set_action = action_wrapper<"set"_n, &singleton_example::set>;
-      using get_action = action_wrapper<"get"_n, &singleton_example::get>;
+      using set_action = action_wrapper<NT(set), &singleton_example::set>;
+      using get_action = action_wrapper<NT(get), &singleton_example::get>;
 };

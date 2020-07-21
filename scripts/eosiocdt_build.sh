@@ -95,9 +95,6 @@ if [ "$ARCH" == "Linux" ]; then
          CXX_COMPILER=g++
          C_COMPILER=gcc
       ;;
-      "elementary OS")
-         FILE="${REPO_ROOT}/scripts/eosiocdt_build_ubuntu.sh"
-      ;;
       "Linux Mint")
          FILE="${REPO_ROOT}/scripts/eosiocdt_build_ubuntu.sh"
       ;;

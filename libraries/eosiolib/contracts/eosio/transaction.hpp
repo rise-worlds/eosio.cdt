@@ -14,7 +14,7 @@ namespace eosio {
    namespace internal_use_do_not_use {
       extern "C" {
          __attribute__((eosio_wasm_import))
-         void send_deferred(const uint128_t&, uint64_t, const char*, size_t, uint32_t);
+         void send_deferred(const uint128_t&, const capi_name*, const char*, size_t, uint32_t);
 
          __attribute__((eosio_wasm_import))
          int cancel_deferred(const uint128_t&);
@@ -124,7 +124,7 @@ namespace eosio {
        */
       void send(const uint128_t& sender_id, name payer, bool replace_existing = false) const {
          auto serialize = pack(*this);
-         internal_use_do_not_use::send_deferred(sender_id, payer.value, serialize.data(), serialize.size(), replace_existing);
+         internal_use_do_not_use::send_deferred(sender_id, &payer.value.cvalue, serialize.data(), serialize.size(), replace_existing);
       }
 
       std::vector<action>  context_free_actions;
@@ -173,7 +173,7 @@ namespace eosio {
     *  @param replace - If true, will replace an existing transaction.
     */
    inline void send_deferred(const uint128_t& sender_id, name payer, const char* serialized_transaction, size_t size, bool replace = false) {
-     internal_use_do_not_use::send_deferred(sender_id, payer.value, serialized_transaction, size, replace);
+     internal_use_do_not_use::send_deferred(sender_id, &payer.value.cvalue, serialized_transaction, size, replace);
    }
    /**
     *  Retrieve the indicated action from the active transaction.

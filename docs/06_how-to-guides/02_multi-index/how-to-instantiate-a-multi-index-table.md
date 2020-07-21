@@ -50,7 +50,7 @@ using namespace eosio;
     uint64_t primary_key( ) const { return test_primary.value; }
   };
   
-+  typedef eosio::multi_index<"testtaba"_n, test_table> test_tables;
++  typedef eosio::multi_index<NT(testtaba), test_table> test_tables;
 ```
 
 6. Define the multi index table data member of type `test_tables` defined in the privious step
@@ -65,7 +65,7 @@ using namespace eosio;
     uint64_t primary_key( ) const { return test_primary.value; }
   };
   
-  typedef eosio::multi_index<"testtaba"_n, test_table> test_tables;
+  typedef eosio::multi_index<NT(testtaba), test_table> test_tables;
 +  test_tables testtab;
 ```
 
@@ -116,7 +116,7 @@ class [[eosio::contract]] multi_index_example : public contract {
       // the multi index type definition, for ease of use define a type alias `test_tables`, 
       // based on the multi_index template type, parametarized with a random name and 
       // the test_table data structure
-      typedef eosio::multi_index<"testtaba"_n, test_table> test_tables;
+      typedef eosio::multi_index<NT(testtaba), test_table> test_tables;
 
       // the multi index table instance declared as a data member of type test_tables
       test_tables testtab;
@@ -124,8 +124,8 @@ class [[eosio::contract]] multi_index_example : public contract {
       [[eosio::action]] void set( name user );
       [[eosio::action]] void print( name user );
 
-      using set_action = action_wrapper<"set"_n, &multi_index_example::set>;
-      using print_action = action_wrapper<"print"_n, &multi_index_example::print>;
+      using set_action = action_wrapper<NT(set), &multi_index_example::set>;
+      using print_action = action_wrapper<NT(print), &multi_index_example::print>;
 };
 ```
 

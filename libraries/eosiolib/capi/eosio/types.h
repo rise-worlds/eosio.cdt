@@ -27,7 +27,17 @@
 /* macro to align/overalign a type to ensure calls to intrinsics with pointers/references are properly aligned */
 #define ALIGNED(X) __attribute__ ((aligned (16))) X
 
-typedef uint64_t capi_name;
+// typedef uint64_t capi_name;
+struct ALIGNED(capi_name) {
+// struct capi_name {
+   union 
+   {
+      /* data */
+      uint64_t data[4] = { 0 };
+      uint8_t hash[32];
+   };
+   
+};
 
 /**
  * EOSIO Public Key. K1 and R1 keys are 34 bytes.  Newer keys can be variable-sized

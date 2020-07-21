@@ -20,12 +20,12 @@ CONTRACT multi_index_example : public contract {
          uint64_t by_secondary()const { return secondary.value; }
       };
 
-      typedef eosio::multi_index<"testtaba"_n, test_table, eosio::indexed_by<"secid"_n, eosio::const_mem_fun<test_table, uint64_t, &test_table::by_secondary>>> test_tables;
+      typedef eosio::multi_index<NT(testtaba), test_table, eosio::indexed_by<NT(secid), eosio::const_mem_fun<test_table, uint64_t, &test_table::by_secondary>>> test_tables;
 
-      using set_action = action_wrapper<"set"_n, &multi_index_example::set>;
-      using print_action = action_wrapper<"print"_n, &multi_index_example::print>;
-      using bysec_action = action_wrapper<"bysec"_n, &multi_index_example::bysec>;
-      using mod_action = action_wrapper<"mod"_n, &multi_index_example::mod>;
+      using set_action = action_wrapper<NT(set), &multi_index_example::set>;
+      using print_action = action_wrapper<NT(print), &multi_index_example::print>;
+      using bysec_action = action_wrapper<NT(bysec), &multi_index_example::bysec>;
+      using mod_action = action_wrapper<NT(mod), &multi_index_example::mod>;
       test_tables testtab;
 };
 

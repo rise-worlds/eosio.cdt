@@ -403,6 +403,7 @@ struct generation_utils {
 
          {"block_timestamp", "block_timestamp_type"},
          {"capi_name",    "name"},
+         {"uint256_t",    "uint256"},
          {"capi_public_key", "public_key"},
          {"capi_signature", "signature"},
          {"capi_checksum160", "checksum160"},
@@ -538,6 +539,7 @@ struct generation_utils {
          "string",
          "block_timestamp_type",
          "name",
+         "uint256",
          "checksum160",
          "checksum256",
          "checksum512",

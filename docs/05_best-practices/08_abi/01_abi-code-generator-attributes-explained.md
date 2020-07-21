@@ -46,7 +46,7 @@ struct __attribute__((eosio_table)) testtable {
    /* all other fields */
 };
 
-typedef eosio::multi_index<"tablename"_n, testtable> testtable_t;
+typedef eosio::multi_index<NT(tablename), testtable> testtable_t;
 ```
 
 If you don't want to use the multi-index you can explicitly specify the name in the attribute ```c++ [[eosio::table("<valid action name>")]]```.

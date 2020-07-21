@@ -17,51 +17,76 @@ extern char **environ;
 
 namespace eosio { namespace cdt {
 
+using uint128_t           = unsigned __int128;
+
 uint64_t char_to_symbol( char c ) {
-   if( c >= 'a' && c <= 'z' )
-      return (c - 'a') + 6;
-   if( c >= '1' && c <= '5' )
-      return (c - '1') + 1;
-   return 0;
+    if( c == '~' )
+        return (c - '~') + 49;
+    if( c == '`' )
+        return (c - '`') + 48;
+    if( c == ')' )
+        return (c - ')') + 47;
+    if( c == '(' )
+        return (c - '(') + 46;
+    if( c == '}' )
+        return (c - '}') + 45;
+    if( c == '{' )
+        return (c - '{') + 44;
+    if( c == ']' )
+        return (c - ']') + 43;
+    if( c == '[' )
+        return (c - '[') + 42;
+    if( c == '>' )
+        return (c - '>') + 41;
+    if( c == '<' )
+        return (c - '<') + 40;
+    if( c == ':' )
+        return (c - ':') + 39;
+    if( c == '_' )
+        return (c - '_') + 38;
+    if( c >= 'A' && c <= 'Z' )
+        return (c - 'A') + 12;
+    if( c >= 'a' && c <= 'z' )
+        return (c - 'a') + 12;
+    if( c >= '0' && c <= '9' )
+        return (c - '0') + 2;
+    if( c == '-' )
+        return (c - '-') + 1;
+    return 0;
 }
 
-uint64_t string_to_name( const char* str )
+uint128_t string_to_name( const char* str )
 {
-   uint64_t name = 0;
-   int i = 0;
-   for ( ; str[i] && i < 12; ++i) {
-       // NOTE: char_to_symbol() returns char type, and without this explicit
-       // expansion to uint64 type, the compilation fails at the point of usage
-       // of string_to_name(), where the usage requires constant (compile time) expression.
-        name |= (char_to_symbol(str[i]) & 0x1f) << (64 - 5 * (i + 1));
+    uint128_t name = 0;
+    int i = 0;
+    for ( ; str[i] && i < 20; ++i) {
+        uint128_t c = (char_to_symbol(str[i]) & 0x3f);
+        c <<= (4 + (6 * i));
+        name |= c;
     }
 
-   // The for-loop encoded up to 60 high bits into uint64 'name' variable,
-   // if (strlen(str) > 12) then encode str[12] into the low (remaining)
-   // 4 bits of 'name'
-   if (i == 12)
-       name |= char_to_symbol(str[12]) & 0x0F;
-   return name;
+    return name;
 }
 
 template <typename Lambda>
 void validate_name( const std::string& str, Lambda&& error_handler ) {
    const auto len = str.length();
-   if ( len > 13 ) { 
-      std::cout << "Error, name {" << str << "} is more than 13 characters long\n";
+   if ( len > 20 ) {
+      std::cout << "Error, name {" << str << "} is more than 20 characters long\n";
       return error_handler();
    }
-   uint64_t value = string_to_name( str.c_str() );
+   uint128_t value = string_to_name( str.c_str() );
 
-   static const char* charmap = ".12345abcdefghijklmnopqrstuvwxyz";
-   std::string str2(13,'.');
+   static const char* charmap = ".-0123456789abcdefghijklmnopqrstuvwxyz_:<>[]{}()`~";
+   std::string str2(20,'.');
 
-   uint64_t tmp = value;
-   for( uint32_t i = 0; i <= 12; ++i ) {
-      char c = charmap[tmp & (i == 0 ? 0x0f : 0x1f)];
-      str2[12-i] = c;
-      tmp >>= (i == 0 ? 4 : 5);
-   }
+    uint128_t tmp = value;
+    tmp >>= 4;
+    for( uint32_t i = 0; i < 20; ++i ) {
+        char c = charmap[tmp & 0x3f];
+        str2[i] = c;
+        tmp >>= 6;
+    }
    
    auto trim = [](std::string& s) {
       int i;
@@ -78,16 +103,30 @@ void validate_name( const std::string& str, Lambda&& error_handler ) {
    }
 }
 
-std::string name_to_string( uint64_t nm ) {
-   static const char* charmap = ".12345abcdefghijklmnopqrstuvwxyz";
-   std::string str(13,'.');
+std::string name_to_string( uint64_t name_v1, uint64_t name_v2, uint64_t name_v3, uint64_t name_v4 ) {
+    static const char* charmap = ".-0123456789abcdefghijklmnopqrstuvwxyz_:<>[]{}()`~";
+    std::string str(43,'.');
 
-   uint64_t tmp = nm;
-   for( uint32_t i = 0; i <= 12; ++i ) {
-      char c = charmap[tmp & (i == 0 ? 0x0f : 0x1f)];
-      str[12-i] = c;
-      tmp >>= (i == 0 ? 4 : 5);
-   }
+    uint128_t tmp = name_v2;
+    tmp <<= 64;
+    tmp |= name_v1;
+    tmp >>= 4;
+    uint32_t i = 0;
+    for( ; i < 20; ++i ) {
+        char c = charmap[tmp & 0x3f];
+        str[i] = c;
+        tmp >>= 6;
+    }
+    tmp |= (name_v3 & 0x3ull) << 4;
+    str[i] = charmap[tmp & 0x3f];
+    tmp = name_v4;
+    tmp <<= 62;
+    tmp |= name_v3 >> 2;
+    for ( i = 22; i < 42; ++i ) {
+       char c = charmap[tmp & 0x3f];
+       str[i] = c;
+       tmp >>= 6;
+    }
 
    auto trim_right_dots = [](std::string& str) {
       const auto last = str.find_last_not_of('.');

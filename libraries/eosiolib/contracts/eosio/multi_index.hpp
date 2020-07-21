@@ -8,6 +8,7 @@
 #include "../../core/eosio/name.hpp"
 #include "../../core/eosio/serialize.hpp"
 #include "../../core/eosio/fixed_bytes.hpp"
+#include "../../capi/eosio/types.h"
 
 #include <vector>
 #include <tuple>
@@ -20,14 +21,18 @@
 #include <algorithm>
 #include <memory>
 
+extern "C" {
+   struct __attribute__((aligned (16))) capi_name;
+}
+
 namespace eosio {
   namespace internal_use_do_not_use {
     extern "C" {
       __attribute__((eosio_wasm_import))
-      int32_t db_store_i64(uint64_t, uint64_t, uint64_t, uint64_t,  const void*, uint32_t);
+      int32_t db_store_i64(const capi_name*, const capi_name*, const capi_name*, const capi_name*,  const void*, uint32_t);
 
       __attribute__((eosio_wasm_import))
-      void db_update_i64(int32_t, uint64_t, const void*, uint32_t);
+      void db_update_i64(int32_t, const capi_name*, const void*, uint32_t);
 
       __attribute__((eosio_wasm_import))
       void db_remove_i64(int32_t);
@@ -36,172 +41,172 @@ namespace eosio {
       int32_t db_get_i64(int32_t, const void*, uint32_t);
 
       __attribute__((eosio_wasm_import))
-      int32_t db_next_i64(int32_t, uint64_t*);
+      int32_t db_next_i64(int32_t, capi_name*);
 
       __attribute__((eosio_wasm_import))
-      int32_t db_previous_i64(int32_t, uint64_t*);
+      int32_t db_previous_i64(int32_t, capi_name*);
 
       __attribute__((eosio_wasm_import))
-      int32_t db_find_i64(uint64_t, uint64_t, uint64_t, uint64_t);
+      int32_t db_find_i64(const capi_name*, const capi_name*, const capi_name*, const capi_name*);
 
       __attribute__((eosio_wasm_import))
-      int32_t db_lowerbound_i64(uint64_t, uint64_t, uint64_t, uint64_t);
+      int32_t db_lowerbound_i64(const capi_name*, const capi_name*, const capi_name*, const capi_name*);
 
       __attribute__((eosio_wasm_import))
-      int32_t db_upperbound_i64(uint64_t, uint64_t, uint64_t, uint64_t);
+      int32_t db_upperbound_i64(const capi_name*, const capi_name*, const capi_name*, const capi_name*);
 
       __attribute__((eosio_wasm_import))
-      int32_t db_end_i64(uint64_t, uint64_t, uint64_t);
+      int32_t db_end_i64(const capi_name*, const capi_name*, const capi_name*);
 
       __attribute__((eosio_wasm_import))
-      int32_t db_idx64_store(uint64_t, uint64_t, uint64_t, uint64_t, const uint64_t*);
+      int32_t db_idx64_store(const capi_name*, const capi_name*, const capi_name*, const capi_name*, const uint64_t*);
 
       __attribute__((eosio_wasm_import))
-      void db_idx64_update(int32_t, uint64_t, const uint64_t*);
+      void db_idx64_update(int32_t, const capi_name*, const uint64_t*);
 
       __attribute__((eosio_wasm_import))
       void db_idx64_remove(int32_t);
 
       __attribute__((eosio_wasm_import))
-      int32_t db_idx64_next(int32_t, uint64_t*);
+      int32_t db_idx64_next(int32_t, capi_name*);
 
       __attribute__((eosio_wasm_import))
-      int32_t db_idx64_previous(int32_t, uint64_t*);
+      int32_t db_idx64_previous(int32_t, capi_name*);
 
       __attribute__((eosio_wasm_import))
-      int32_t db_idx64_find_primary(uint64_t, uint64_t, uint64_t, uint64_t*, uint64_t);
+      int32_t db_idx64_find_primary(const capi_name*, const capi_name*, const capi_name*, uint64_t*, const capi_name*);
 
       __attribute__((eosio_wasm_import))
-      int32_t db_idx64_find_secondary(uint64_t, uint64_t, uint64_t, const uint64_t*, uint64_t*);
+      int32_t db_idx64_find_secondary(const capi_name*, const capi_name*, const capi_name*, const uint64_t*, capi_name*);
 
       __attribute__((eosio_wasm_import))
-      int32_t db_idx64_lowerbound(uint64_t, uint64_t, uint64_t, uint64_t*, uint64_t*);
+      int32_t db_idx64_lowerbound(const capi_name*, const capi_name*, const capi_name*, uint64_t*, capi_name*);
 
       __attribute__((eosio_wasm_import))
-      int32_t db_idx64_upperbound(uint64_t, uint64_t, uint64_t, uint64_t*, uint64_t*);
+      int32_t db_idx64_upperbound(const capi_name*, const capi_name*, const capi_name*, uint64_t*, capi_name*);
 
       __attribute__((eosio_wasm_import))
-      int32_t db_idx64_end(uint64_t, uint64_t, uint64_t);
+      int32_t db_idx64_end(const capi_name*, const capi_name*, const capi_name*);
 
       __attribute__((eosio_wasm_import))
-      int32_t db_idx128_store(uint64_t, uint64_t, uint64_t, uint64_t, const uint128_t*);
+      int32_t db_idx128_store(const capi_name*, const capi_name*, const capi_name*, const capi_name*, const uint128_t*);
 
       __attribute__((eosio_wasm_import))
-      void db_idx128_update(int32_t, uint64_t, const uint128_t*);
+      void db_idx128_update(int32_t, const capi_name*, const uint128_t*);
 
       __attribute__((eosio_wasm_import))
       void db_idx128_remove(int32_t);
 
       __attribute__((eosio_wasm_import))
-      int32_t db_idx128_next(int32_t, uint64_t*);
+      int32_t db_idx128_next(int32_t, capi_name*);
 
       __attribute__((eosio_wasm_import))
-      int32_t db_idx128_previous(int32_t, uint64_t*);
+      int32_t db_idx128_previous(int32_t, capi_name*);
 
       __attribute__((eosio_wasm_import))
-      int32_t db_idx128_find_primary(uint64_t, uint64_t, uint64_t, uint128_t*, uint64_t);
+      int32_t db_idx128_find_primary(const capi_name*, const capi_name*, const capi_name*, uint128_t*, const capi_name*);
 
       __attribute__((eosio_wasm_import))
-      int32_t db_idx128_find_secondary(uint64_t, uint64_t, uint64_t, const uint128_t*, uint64_t*);
+      int32_t db_idx128_find_secondary(const capi_name*, const capi_name*, const capi_name*, const uint128_t*, capi_name*);
 
       __attribute__((eosio_wasm_import))
-      int32_t db_idx128_lowerbound(uint64_t, uint64_t, uint64_t, uint128_t*, uint64_t*);
+      int32_t db_idx128_lowerbound(const capi_name*, const capi_name*, const capi_name*, uint128_t*, capi_name*);
 
       __attribute__((eosio_wasm_import))
-      int32_t db_idx128_upperbound(uint64_t, uint64_t, uint64_t, uint128_t*, uint64_t*);
+      int32_t db_idx128_upperbound(const capi_name*, const capi_name*, const capi_name*, uint128_t*, capi_name*);
 
       __attribute__((eosio_wasm_import))
-      int32_t db_idx128_end(uint64_t, uint64_t, uint64_t);
+      int32_t db_idx128_end(const capi_name*, const capi_name*, const capi_name*);
 
       __attribute__((eosio_wasm_import))
-      int32_t db_idx256_store(uint64_t, uint64_t, uint64_t, uint64_t, const uint128_t*, uint32_t);
+      int32_t db_idx256_store(const capi_name*, const capi_name*, const capi_name*, const capi_name*, const uint128_t*, uint32_t);
 
       __attribute__((eosio_wasm_import))
-      void db_idx256_update(int32_t, uint64_t, const uint128_t*, uint32_t);
+      void db_idx256_update(int32_t, const capi_name*, const uint128_t*, uint32_t);
 
       __attribute__((eosio_wasm_import))
       void db_idx256_remove(int32_t);
 
       __attribute__((eosio_wasm_import))
-      int32_t db_idx256_next(int32_t, uint64_t*);
+      int32_t db_idx256_next(int32_t, capi_name*);
 
       __attribute__((eosio_wasm_import))
-      int32_t db_idx256_previous(int32_t, uint64_t*);
+      int32_t db_idx256_previous(int32_t, capi_name*);
 
       __attribute__((eosio_wasm_import))
-      int32_t db_idx256_find_primary(uint64_t, uint64_t, uint64_t, uint128_t*, uint32_t, uint64_t);
+      int32_t db_idx256_find_primary(const capi_name*, const capi_name*, const capi_name*, uint128_t*, uint32_t, const capi_name*);
 
       __attribute__((eosio_wasm_import))
-      int32_t db_idx256_find_secondary(uint64_t, uint64_t, uint64_t, const uint128_t*, uint32_t, uint64_t*);
+      int32_t db_idx256_find_secondary(const capi_name*, const capi_name*, const capi_name*, const uint128_t*, uint32_t, capi_name*);
 
       __attribute__((eosio_wasm_import))
-      int32_t db_idx256_lowerbound(uint64_t, uint64_t, uint64_t, uint128_t*, uint32_t, uint64_t*);
+      int32_t db_idx256_lowerbound(const capi_name*, const capi_name*, const capi_name*, uint128_t*, uint32_t, capi_name*);
 
       __attribute__((eosio_wasm_import))
-      int32_t db_idx256_upperbound(uint64_t, uint64_t, uint64_t, uint128_t*, uint32_t, uint64_t*);
+      int32_t db_idx256_upperbound(const capi_name*, const capi_name*, const capi_name*, uint128_t*, uint32_t, capi_name*);
 
       __attribute__((eosio_wasm_import))
-      int32_t db_idx256_end(uint64_t, uint64_t, uint64_t);
+      int32_t db_idx256_end(const capi_name*, const capi_name*, const capi_name*);
 
       __attribute__((eosio_wasm_import))
-      int32_t db_idx_double_store(uint64_t, uint64_t, uint64_t, uint64_t, const double*);
+      int32_t db_idx_double_store(const capi_name*, const capi_name*, const capi_name*, const capi_name*, const double*);
 
       __attribute__((eosio_wasm_import))
-      void db_idx_double_update(int32_t, uint64_t, const double*);
+      void db_idx_double_update(int32_t, const capi_name*, const double*);
 
       __attribute__((eosio_wasm_import))
       void db_idx_double_remove(int32_t);
 
       __attribute__((eosio_wasm_import))
-      int32_t db_idx_double_next(int32_t, uint64_t*);
+      int32_t db_idx_double_next(int32_t, capi_name*);
 
       __attribute__((eosio_wasm_import))
-      int32_t db_idx_double_previous(int32_t, uint64_t*);
+      int32_t db_idx_double_previous(int32_t, capi_name*);
 
       __attribute__((eosio_wasm_import))
-      int32_t db_idx_double_find_primary(uint64_t, uint64_t, uint64_t, double*, uint64_t);
+      int32_t db_idx_double_find_primary(const capi_name*, const capi_name*, const capi_name*, double*, const capi_name*);
 
       __attribute__((eosio_wasm_import))
-      int32_t db_idx_double_find_secondary(uint64_t, uint64_t, uint64_t, const double*, uint64_t*);
+      int32_t db_idx_double_find_secondary(const capi_name*, const capi_name*, const capi_name*, const double*, capi_name*);
 
       __attribute__((eosio_wasm_import))
-      int32_t db_idx_double_lowerbound(uint64_t, uint64_t, uint64_t, double*, uint64_t*);
+      int32_t db_idx_double_lowerbound(const capi_name*, const capi_name*, const capi_name*, double*, capi_name*);
 
       __attribute__((eosio_wasm_import))
-      int32_t db_idx_double_upperbound(uint64_t, uint64_t, uint64_t, double*, uint64_t*);
+      int32_t db_idx_double_upperbound(const capi_name*, const capi_name*, const capi_name*, double*, capi_name*);
 
       __attribute__((eosio_wasm_import))
-      int32_t db_idx_double_end(uint64_t, uint64_t, uint64_t);
+      int32_t db_idx_double_end(const capi_name*, const capi_name*, const capi_name*);
 
       __attribute__((eosio_wasm_import))
-      int32_t db_idx_long_double_store(uint64_t, uint64_t, uint64_t, uint64_t, const long double*);
+      int32_t db_idx_long_double_store(const capi_name*, const capi_name*, const capi_name*, const capi_name*, const long double*);
 
       __attribute__((eosio_wasm_import))
-      void db_idx_long_double_update(int32_t, uint64_t, const long double*);
+      void db_idx_long_double_update(int32_t, const capi_name*, const long double*);
 
       __attribute__((eosio_wasm_import))
       void db_idx_long_double_remove(int32_t);
 
       __attribute__((eosio_wasm_import))
-      int32_t db_idx_long_double_next(int32_t, uint64_t*);
+      int32_t db_idx_long_double_next(int32_t, capi_name*);
 
       __attribute__((eosio_wasm_import))
-      int32_t db_idx_long_double_previous(int32_t, uint64_t*);
+      int32_t db_idx_long_double_previous(int32_t, capi_name*);
 
       __attribute__((eosio_wasm_import))
-      int32_t db_idx_long_double_find_primary(uint64_t, uint64_t, uint64_t, long double*, uint64_t);
+      int32_t db_idx_long_double_find_primary(const capi_name*, const capi_name*, const capi_name*, long double*, const capi_name*);
 
       __attribute__((eosio_wasm_import))
-      int32_t db_idx_long_double_find_secondary(uint64_t, uint64_t, uint64_t, const long double*, uint64_t*);
+      int32_t db_idx_long_double_find_secondary(const capi_name*, const capi_name*, const capi_name*, const long double*, capi_name*);
 
       __attribute__((eosio_wasm_import))
-      int32_t db_idx_long_double_lowerbound(uint64_t, uint64_t, uint64_t, long double*, uint64_t*);
+      int32_t db_idx_long_double_lowerbound(const capi_name*, const capi_name*, const capi_name*, long double*, capi_name*);
 
       __attribute__((eosio_wasm_import))
-      int32_t db_idx_long_double_upperbound(uint64_t, uint64_t, uint64_t, long double*, uint64_t*);
+      int32_t db_idx_long_double_upperbound(const capi_name*, const capi_name*, const capi_name*, long double*, capi_name*);
 
       __attribute__((eosio_wasm_import))
-      int32_t db_idx_long_double_end(uint64_t, uint64_t, uint64_t);
+      int32_t db_idx_long_double_end(const capi_name*, const capi_name*, const capi_name*);
     }
   };
 
@@ -238,54 +243,54 @@ struct const_mem_fun
 #define WRAP_SECONDARY_SIMPLE_TYPE(IDX, TYPE)\
 template<>\
 struct secondary_index_db_functions<TYPE> {\
-   static int32_t db_idx_next( int32_t iterator, uint64_t* primary )          { return internal_use_do_not_use::db_##IDX##_next( iterator, primary ); } \
-   static int32_t db_idx_previous( int32_t iterator, uint64_t* primary )      { return internal_use_do_not_use::db_##IDX##_previous( iterator, primary ); } \
+   static int32_t db_idx_next( int32_t iterator, uint256_t& primary )          { return internal_use_do_not_use::db_##IDX##_next( iterator, primary ); } \
+   static int32_t db_idx_previous( int32_t iterator, uint256_t& primary )      { return internal_use_do_not_use::db_##IDX##_previous( iterator, primary ); } \
    static void    db_idx_remove( int32_t iterator  )                          { internal_use_do_not_use::db_##IDX##_remove( iterator ); } \
-   static int32_t db_idx_end( uint64_t code, uint64_t scope, uint64_t table ) { return internal_use_do_not_use::db_##IDX##_end( code, scope, table ); } \
-   static int32_t db_idx_store( uint64_t scope, uint64_t table, uint64_t payer, uint64_t id, const TYPE& secondary ) {\
+   static int32_t db_idx_end( uint256_t code, uint256_t scope, uint256_t table ) { return internal_use_do_not_use::db_##IDX##_end( code, scope, table ); } \
+   static int32_t db_idx_store( uint256_t scope, uint256_t table, uint256_t payer, uint256_t id, const TYPE& secondary ) {\
      return internal_use_do_not_use::db_##IDX##_store( scope, table, payer, id, &secondary ); \
    }\
-   static void    db_idx_update( int32_t iterator, uint64_t payer, const TYPE& secondary ) {\
+   static void    db_idx_update( int32_t iterator, uint256_t payer, const TYPE& secondary ) {\
      internal_use_do_not_use::db_##IDX##_update( iterator, payer, &secondary ); \
    }\
-   static int32_t db_idx_find_primary( uint64_t code, uint64_t scope, uint64_t table, uint64_t primary, TYPE& secondary ) {\
+   static int32_t db_idx_find_primary( uint256_t code, uint256_t scope, uint256_t table, uint256_t primary, TYPE& secondary ) {\
      return internal_use_do_not_use::db_##IDX##_find_primary( code, scope, table, &secondary, primary ); \
    }\
-   static int32_t db_idx_find_secondary( uint64_t code, uint64_t scope, uint64_t table, const TYPE& secondary, uint64_t& primary ) {\
-     return internal_use_do_not_use::db_##IDX##_find_secondary( code, scope, table, &secondary, &primary ); \
+   static int32_t db_idx_find_secondary( uint256_t code, uint256_t scope, uint256_t table, const TYPE& secondary, uint256_t& primary ) {\
+     return internal_use_do_not_use::db_##IDX##_find_secondary( code, scope, table, &secondary, primary ); \
    }\
-   static int32_t db_idx_lowerbound( uint64_t code, uint64_t scope, uint64_t table, TYPE& secondary, uint64_t& primary ) {\
-     return internal_use_do_not_use::db_##IDX##_lowerbound( code, scope, table, &secondary, &primary ); \
+   static int32_t db_idx_lowerbound( uint256_t code, uint256_t scope, uint256_t table, TYPE& secondary, uint256_t& primary ) {\
+     return internal_use_do_not_use::db_##IDX##_lowerbound( code, scope, table, &secondary, primary ); \
    }\
-   static int32_t db_idx_upperbound( uint64_t code, uint64_t scope, uint64_t table, TYPE& secondary, uint64_t& primary ) {\
-     return internal_use_do_not_use::db_##IDX##_upperbound( code, scope, table, &secondary, &primary ); \
+   static int32_t db_idx_upperbound( uint256_t code, uint256_t scope, uint256_t table, TYPE& secondary, uint256_t& primary ) {\
+     return internal_use_do_not_use::db_##IDX##_upperbound( code, scope, table, &secondary, primary ); \
    }\
 };
 
 #define WRAP_SECONDARY_ARRAY_TYPE(IDX, TYPE)\
 template<>\
 struct secondary_index_db_functions<TYPE> {\
-   static int32_t db_idx_next( int32_t iterator, uint64_t* primary )          { return internal_use_do_not_use::db_##IDX##_next( iterator, primary ); } \
-   static int32_t db_idx_previous( int32_t iterator, uint64_t* primary )      { return internal_use_do_not_use::db_##IDX##_previous( iterator, primary ); } \
+   static int32_t db_idx_next( int32_t iterator, uint256_t& primary )          { return internal_use_do_not_use::db_##IDX##_next( iterator, primary ); } \
+   static int32_t db_idx_previous( int32_t iterator, uint256_t& primary )      { return internal_use_do_not_use::db_##IDX##_previous( iterator, primary ); } \
    static void    db_idx_remove( int32_t iterator )                           { internal_use_do_not_use::db_##IDX##_remove( iterator ); } \
-   static int32_t db_idx_end( uint64_t code, uint64_t scope, uint64_t table ) { return internal_use_do_not_use::db_##IDX##_end( code, scope, table ); } \
-   static int32_t db_idx_store( uint64_t scope, uint64_t table, uint64_t payer, uint64_t id, const TYPE& secondary ) {\
+   static int32_t db_idx_end( uint256_t code, uint256_t scope, uint256_t table ) { return internal_use_do_not_use::db_##IDX##_end( code, scope, table ); } \
+   static int32_t db_idx_store( uint256_t scope, uint256_t table, uint256_t payer, uint256_t id, const TYPE& secondary ) {\
      return internal_use_do_not_use::db_##IDX##_store( scope, table, payer, id, secondary.data(), TYPE::num_words() ); \
    }\
-   static void    db_idx_update( int32_t iterator, uint64_t payer, const TYPE& secondary ) {\
+   static void    db_idx_update( int32_t iterator, uint256_t payer, const TYPE& secondary ) {\
      internal_use_do_not_use::db_##IDX##_update( iterator, payer, secondary.data(), TYPE::num_words() ); \
    }\
-   static int32_t db_idx_find_primary( uint64_t code, uint64_t scope, uint64_t table, uint64_t primary, TYPE& secondary ) {\
+   static int32_t db_idx_find_primary( uint256_t code, uint256_t scope, uint256_t table, uint256_t primary, TYPE& secondary ) {\
      return internal_use_do_not_use::db_##IDX##_find_primary( code, scope, table, secondary.data(), TYPE::num_words(), primary ); \
    }\
-   static int32_t db_idx_find_secondary( uint64_t code, uint64_t scope, uint64_t table, const TYPE& secondary, uint64_t& primary ) {\
-     return internal_use_do_not_use::db_##IDX##_find_secondary( code, scope, table, secondary.data(), TYPE::num_words(), &primary ); \
+   static int32_t db_idx_find_secondary( uint256_t code, uint256_t scope, uint256_t table, const TYPE& secondary, uint256_t& primary ) {\
+     return internal_use_do_not_use::db_##IDX##_find_secondary( code, scope, table, secondary.data(), TYPE::num_words(), primary ); \
    }\
-   static int32_t db_idx_lowerbound( uint64_t code, uint64_t scope, uint64_t table, TYPE& secondary, uint64_t& primary ) {\
-     return internal_use_do_not_use::db_##IDX##_lowerbound( code, scope, table, secondary.data(), TYPE::num_words(), &primary ); \
+   static int32_t db_idx_lowerbound( uint256_t code, uint256_t scope, uint256_t table, TYPE& secondary, uint256_t& primary ) {\
+     return internal_use_do_not_use::db_##IDX##_lowerbound( code, scope, table, secondary.data(), TYPE::num_words(), primary ); \
    }\
-   static int32_t db_idx_upperbound( uint64_t code, uint64_t scope, uint64_t table, TYPE& secondary, uint64_t& primary ) {\
-     return internal_use_do_not_use::db_##IDX##_upperbound( code, scope, table, secondary.data(), TYPE::num_words(), &primary ); \
+   static int32_t db_idx_upperbound( uint256_t code, uint256_t scope, uint256_t table, TYPE& secondary, uint256_t& primary ) {\
+     return internal_use_do_not_use::db_##IDX##_upperbound( code, scope, table, secondary.data(), TYPE::num_words(), primary ); \
    }\
 };
 
@@ -330,6 +335,12 @@ namespace _multi_index_detail {
       static constexpr eosio::fixed_bytes<32> true_lowest() { return eosio::fixed_bytes<32>(); }
    };
 
+   WRAP_SECONDARY_ARRAY_TYPE(idx256, eosio::uint256_t)
+   template<>
+   struct secondary_key_traits<eosio::uint256_t> {
+      static constexpr eosio::uint256_t true_lowest() { return eosio::uint256_t(); }
+   };
+
 }
 
 /**
@@ -357,16 +368,22 @@ namespace _multi_index_detail {
  *      void myaction() {
  *        auto code = _self;
  *        auto scope = _self;
- *        multi_index<"mytable"_n, record,
+ *        multi_index<NT(mytable), record,
  *                   indexed_by< "bysecondary"_n, const_mem_fun<record, uint128_t, &record::get_secondary> > > table( code, scope);
  *      }
  *  }
  *  EOSIO_DISPATCH( mycontract, (myaction) )
  *  @endcode
  */
-template<name::raw IndexName, typename Extractor>
+//template<name::raw IndexName, typename Extractor>
+template<uint64_t IndexNameV1, uint64_t IndexNameV2, uint64_t IndexNameV3, uint64_t IndexNameV4, typename Extractor>
 struct indexed_by {
-   enum constants { index_name   = static_cast<uint64_t>(IndexName) };
+   //enum constants { index_name   = static_cast<uint64_t>(IndexName) };
+   constexpr static uint64_t index_name_v1 = static_cast<uint64_t>(IndexNameV1);
+   constexpr static uint64_t index_name_v2 = static_cast<uint64_t>(IndexNameV2);
+   constexpr static uint64_t index_name_v3 = static_cast<uint64_t>(IndexNameV3);
+   constexpr static uint64_t index_name_v4 = static_cast<uint64_t>(IndexNameV4);
+   constexpr static name index_name = name(IndexNameV1, IndexNameV2, IndexNameV3, IndexNameV4);
    typedef Extractor secondary_extractor_type;
 };
 
@@ -414,7 +431,7 @@ struct indexed_by {
  *      void myaction() {
  *        auto code = _self;
  *        auto scope = _self;
- *        multi_index<"mytable"_n, record,
+ *        multi_index<NT(mytable), record,
  *          indexed_by< "bysecondary1"_n, const_mem_fun<record, uint64_t, &record::get_secondary_1> >,
  *          indexed_by< "bysecondary2"_n, const_mem_fun<record, uint128_t, &record::get_secondary_2> >,
  *          indexed_by< "bysecondary3"_n, const_mem_fun<record, checksum256, &record::get_secondary_3> >,
@@ -427,7 +444,8 @@ struct indexed_by {
  *  @endcode
  */
 
-template<name::raw TableName, typename T, typename... Indices>
+//template<name::raw TableName, typename T, typename... Indices>
+template<uint64_t TableNameV1, uint64_t TableNameV2, uint64_t TableNameV3, uint64_t TableNameV4, typename T, typename... Indices>
 class multi_index
 {
    private:
@@ -435,23 +453,26 @@ class multi_index
       static_assert( sizeof...(Indices) <= 16, "multi_index only supports a maximum of 16 secondary indices" );
 
       constexpr static bool validate_table_name( name n ) {
-         // Limit table names to 12 characters so that the last character (4 bits) can be used to distinguish between the secondary indices.
-         return n.length() < 13; //(n & 0x000000000000000FULL) == 0;
+         // Limit table names to 42 characters so that the last character (4 bits) can be used to distinguish between the secondary indices.
+         return n.length() < 43; //(n & 0x000000000000000FULL) == 0;
       }
 
       constexpr static size_t max_stack_buffer_size = 512;
+      constexpr static name TableName = name(TableNameV1, TableNameV2, TableNameV3, TableNameV4);
 
-      static_assert( validate_table_name( name(TableName) ), "multi_index does not support table names with a length greater than 12");
+      static_assert( validate_table_name( name(TableName) ), "multi_index does not support table names with a length greater than 42");
 
       name     _code;
-      uint64_t _scope;
+      uint256_t     _scope;
 
-      mutable uint64_t _next_primary_key;
+      mutable uint256_t _next_primary_key;
 
-      enum next_primary_key_tags : uint64_t {
-         no_available_primary_key = static_cast<uint64_t>(-2), // Must be the smallest uint64_t value compared to all other tags
-         unset_next_primary_key = static_cast<uint64_t>(-1)
-      };
+      //enum next_primary_key_tags : uint64_t {
+      //   no_available_primary_key = static_cast<uint64_t>(-2), // Must be the smallest uint64_t value compared to all other tags
+      //   unset_next_primary_key = static_cast<uint64_t>(-1)
+      //};
+	   static constexpr uint256_t no_available_primary_key = uint256_t(-2); // Must be the smallest uint64_t value compared to all other tags
+      static constexpr uint256_t unset_next_primary_key = uint256_t(-1);
 
       struct item : public T
       {
@@ -468,38 +489,51 @@ class multi_index
 
       struct item_ptr
       {
-         item_ptr(std::unique_ptr<item>&& i, uint64_t pk, int32_t pitr)
+         item_ptr(std::unique_ptr<item>&& i, uint256_t pk, int32_t pitr)
          : _item(std::move(i)), _primary_key(pk), _primary_itr(pitr) {}
 
          std::unique_ptr<item> _item;
-         uint64_t              _primary_key;
+         uint256_t             _primary_key;
          int32_t               _primary_itr;
       };
 
       mutable std::vector<item_ptr> _items_vector;
 
-      template<name::raw IndexName, typename Extractor, uint64_t Number, bool IsConst>
+      //template<name::raw IndexName, typename Extractor, uint64_t Number, bool IsConst>
+      template<uint64_t IndexNameV1, uint64_t IndexNameV2, uint64_t IndexNameV3, uint64_t IndexNameV4, typename Extractor, uint64_t Number, bool IsConst>
       struct index {
          public:
             typedef Extractor  secondary_extractor_type;
             typedef typename std::decay<decltype( Extractor()(nullptr) )>::type secondary_key_type;
 
-            constexpr static bool validate_index_name( eosio::name n ) {
-               return n.value != 0 && n != eosio::name("primary"); // Primary is a reserve index name.
+//         constexpr static bool validate_index_name( eosio::name n ) {
+//            return ((bool)n.value) && n != eosio::name("primary"); // Primary is a reserve index name.
+//         }
+            constexpr static bool validate_index_name( uint64_t v1, uint64_t v2, uint64_t v3, uint64_t v4 ) {
+               return (v1 != 0 || v2 != 0 || v3 != 0 || v4 != 0) && (v1 != 0x2474C61475B0ULL && v2 == 0 && v3 == 0 && v4 == 0); // Primary is a reserve index name.
             }
 
-            static_assert( validate_index_name( name(IndexName) ), "invalid index name used in multi_index" );
+            constexpr static uint64_t index_name_v1 = static_cast<uint64_t>(IndexNameV1);
+            constexpr static uint64_t index_name_v2 = static_cast<uint64_t>(IndexNameV2);
+            constexpr static uint64_t index_name_v3 = static_cast<uint64_t>(IndexNameV3);
+            constexpr static uint64_t index_name_v4 = static_cast<uint64_t>(IndexNameV4);
+            constexpr static eosio::name IndexName = eosio::name(IndexNameV1, IndexNameV2, IndexNameV3, IndexNameV4);
+            //static_assert( validate_index_name( name(IndexName) ), "invalid index name used in multi_index" );
 
-            enum constants {
-               table_name   = static_cast<uint64_t>(TableName),
-               index_name   = static_cast<uint64_t>(IndexName),
-               index_number = Number,
-               index_table_name = (static_cast<uint64_t>(TableName) & 0xFFFFFFFFFFFFFFF0ULL)
-                                    | (Number & 0x000000000000000FULL) // Assuming no more than 16 secondary indices are allowed
-            };
+            //enum constants {
+            //   table_name   = static_cast<uint64_t>(TableName),
+            //   index_name   = static_cast<uint64_t>(IndexName),
+            //   index_number = Number,
+            //   index_table_name = (static_cast<uint64_t>(TableName) & 0xFFFFFFFFFFFFFFF0ULL)
+            //                        | (Number & 0x000000000000000FULL) // Assuming no more than 16 secondary indices are allowed
+            //};
+            constexpr static name table_name = name(TableName);
+            constexpr static name index_name = name(IndexName);
+            constexpr static uint64_t index_number = static_cast<uint64_t>(Number);
+            constexpr static name index_table_name = name((TableNameV1 & 0xFFFFFFFFFFFFFFF0ULL) | (Number & 0x000000000000000FULL), TableNameV2, TableNameV3, TableNameV4);
 
-            constexpr static uint64_t name()   { return index_table_name; }
-            constexpr static uint64_t number() { return Number; }
+            constexpr static uint256_t name()   { return index_table_name.value; }
+            constexpr static uint64_t number() { return static_cast<uint64_t>(Number); }
 
             struct const_iterator : public std::iterator<std::bidirectional_iterator_tag, const T> {
                public:
@@ -537,8 +571,8 @@ class multi_index
                         mi.__iters[Number] = idxitr;
                      }
 
-                     uint64_t next_pk = 0;
-                     auto next_itr = secondary_index_db_functions<secondary_key_type>::db_idx_next( _item->__iters[Number], &next_pk );
+                     uint256_t next_pk = 0ull;
+                     auto next_itr = secondary_index_db_functions<secondary_key_type>::db_idx_next( _item->__iters[Number], next_pk );
                      if( next_itr < 0 ) {
                         _item = nullptr;
                         return *this;
@@ -555,7 +589,7 @@ class multi_index
                   const_iterator& operator--() {
                      using namespace _multi_index_detail;
 
-                     uint64_t prev_pk = 0;
+                     uint256_t prev_pk = 0ull;
                      int32_t  prev_itr = -1;
 
                      if( !_item ) {
@@ -651,7 +685,7 @@ class multi_index
             const_iterator lower_bound( const secondary_key_type& secondary )const {
                using namespace _multi_index_detail;
 
-               uint64_t primary = 0;
+               uint256_t primary = 0ull;
                secondary_key_type secondary_copy(secondary);
                auto itr = secondary_index_db_functions<secondary_key_type>::db_idx_lowerbound( get_code().value, get_scope(), name(), secondary_copy, primary );
                if( itr < 0 ) return cend();
@@ -669,7 +703,7 @@ class multi_index
             const_iterator upper_bound( const secondary_key_type& secondary )const {
                using namespace _multi_index_detail;
 
-               uint64_t primary = 0;
+               uint256_t primary = 0ull;
                secondary_key_type secondary_copy(secondary);
                auto itr = secondary_index_db_functions<secondary_key_type>::db_idx_upperbound( get_code().value, get_scope(), name(), secondary_copy, primary );
                if( itr < 0 ) return cend();
@@ -716,7 +750,7 @@ class multi_index
             }
 
             eosio::name get_code()const  { return _multidx->get_code(); }
-            uint64_t    get_scope()const { return _multidx->get_scope(); }
+            eosio::uint256_t get_scope()const { return _multidx->get_scope(); }
 
             static auto extract_secondary_key(const T& obj) { return secondary_extractor_type()(obj); }
 
@@ -742,14 +776,20 @@ class multi_index
                              hana::tuple<Indices...>() ) ) indices_input_type;
 
          return hana::transform( indices_input_type(), [&]( auto&& idx ){
-             typedef typename std::decay<decltype(hana::at_c<0>(idx))>::type num_type;
-             typedef typename std::decay<decltype(hana::at_c<1>(idx))>::type idx_type;
-             return hana::make_tuple( hana::type_c<index<eosio::name::raw(static_cast<uint64_t>(idx_type::index_name)),
-                                                         typename idx_type::secondary_extractor_type,
-                                                         num_type::e::value, false> >,
-                                      hana::type_c<index<eosio::name::raw(static_cast<uint64_t>(idx_type::index_name)),
-                                                         typename idx_type::secondary_extractor_type,
-                                                         num_type::e::value, true> > );
+            typedef typename std::decay<decltype(hana::at_c<0>(idx))>::type num_type;
+            typedef typename std::decay<decltype(hana::at_c<1>(idx))>::type idx_type;
+            //return hana::make_tuple( hana::type_c<index<eosio::name::raw(static_cast<uint64_t>(idx_type::index_name)),
+            //                                             typename idx_type::secondary_extractor_type,
+            //                                             num_type::e::value, false> >,
+            //                          hana::type_c<index<eosio::name::raw(static_cast<uint64_t>(idx_type::index_name)),
+            //                                             typename idx_type::secondary_extractor_type,
+            //                                             num_type::e::value, true> > );
+            return hana::make_tuple( hana::type_c<index<idx_type::index_name_v1, idx_type::index_name_v2, idx_type::index_name_v3, idx_type::index_name_v4,
+                                           typename idx_type::secondary_extractor_type,
+                                           num_type::e::value, false> >,
+                                     hana::type_c<index<idx_type::index_name_v1, idx_type::index_name_v2, idx_type::index_name_v3, idx_type::index_name_v4,
+                                           typename idx_type::secondary_extractor_type,
+                                           num_type::e::value, true> > );
 
          });
       }
@@ -850,8 +890,14 @@ class multi_index
        *  EOSIO_DISPATCH( addressbook, (myaction) )
        *  @endcode
        */
-      multi_index( name code, uint64_t scope )
-      :_code(code),_scope(scope),_next_primary_key(unset_next_primary_key)
+      explicit multi_index( name code, uint64_t scope )
+        :_code(code),_scope(scope),_next_primary_key(unset_next_primary_key)
+      {}
+      explicit multi_index( name code, uint256_t scope )
+        :_code(code),_scope(scope),_next_primary_key(unset_next_primary_key)
+      {}
+      multi_index( name code, name scope )
+        :_code(code),_scope(scope.value),_next_primary_key(unset_next_primary_key)
       {}
 
       /**
@@ -894,7 +940,7 @@ class multi_index
        *  EOSIO_DISPATCH( addressbook, (myaction) )
        *  @endcode
        */
-      uint64_t get_scope()const { return _scope; }
+      uint256_t get_scope()const { return _scope; }
 
       struct const_iterator : public std::iterator<std::bidirectional_iterator_tag, const T> {
          friend bool operator == ( const const_iterator& a, const const_iterator& b ) {
@@ -922,8 +968,8 @@ class multi_index
          const_iterator& operator++() {
             eosio::check( _item != nullptr, "cannot increment end iterator" );
 
-            uint64_t next_pk;
-            auto next_itr = internal_use_do_not_use::db_next_i64( _item->__primary_itr, &next_pk );
+            uint256_t next_pk;
+            auto next_itr = internal_use_do_not_use::db_next_i64( _item->__primary_itr, &next_pk.cvalue );
             if( next_itr < 0 )
                _item = nullptr;
             else
@@ -935,7 +981,8 @@ class multi_index
             int32_t  prev_itr = -1;
 
             if( !_item ) {
-               auto ei = internal_use_do_not_use::db_end_i64(_multidx->get_code().value, _multidx->get_scope(), static_cast<uint64_t>(TableName));
+               //auto ei = internal_use_do_not_use::db_end_i64(_multidx->get_code().value, _multidx->get_scope(), static_cast<uint64_t>(TableName));
+               auto ei = internal_use_do_not_use::db_end_i64(_multidx->get_code().value, _multidx->get_scope(), &TableName.value);
                eosio::check( ei != -1, "cannot decrement end iterator when the table is empty" );
                prev_itr = internal_use_do_not_use::db_previous_i64( ei , &prev_pk );
                eosio::check( prev_itr >= 0, "cannot decrement end iterator when the table is empty" );
@@ -1238,8 +1285,8 @@ class multi_index
        *  EOSIO_DISPATCH( addressbook, (myaction) )
        *  @endcode
        */
-      const_iterator lower_bound( uint64_t primary )const {
-         auto itr = internal_use_do_not_use::db_lowerbound_i64( _code.value, _scope, static_cast<uint64_t>(TableName), primary );
+      const_iterator lower_bound( uint256_t primary )const {
+         auto itr = internal_use_do_not_use::db_lowerbound_i64( &_code.value.cvalue, &_scope.cvalue, &TableName.value.cvalue, primary );
          if( itr < 0 ) return end();
          const auto& obj = load_object_by_primary_iterator( itr );
          return {this, &obj};
@@ -1282,8 +1329,9 @@ class multi_index
        *  EOSIO_DISPATCH( addressbook, (myaction) )
        *  @endcode
        */
-      const_iterator upper_bound( uint64_t primary )const {
-         auto itr = internal_use_do_not_use::db_upperbound_i64( _code.value, _scope, static_cast<uint64_t>(TableName), primary );
+      const_iterator upper_bound( uint256_t primary )const {
+         //auto itr = internal_use_do_not_use::db_upperbound_i64( _code.value, _scope, static_cast<uint64_t>(TableName), primary );
+         auto itr = internal_use_do_not_use::db_upperbound_i64( _code.value, _scope.value, &TableName.value, primary );
          if( itr < 0 ) return end();
          const auto& obj = load_object_by_primary_iterator( itr );
          return {this, &obj};
@@ -1320,7 +1368,7 @@ class multi_index
        *  EOSIO_DISPATCH( addressbook, (myaction) )
        *  @endcode
        */
-      uint64_t available_primary_key()const {
+      uint256_t available_primary_key()const {
          if( _next_primary_key == unset_next_primary_key ) {
             // This is the first time available_primary_key() is called for this multi_index instance.
             if( begin() == end() ) { // empty table
@@ -1330,8 +1378,11 @@ class multi_index
                auto pk = itr->primary_key(); // largest primary key currently in table
                if( pk >= no_available_primary_key ) // Reserve the tags
                   _next_primary_key = no_available_primary_key;
-               else
-                  _next_primary_key = pk + 1;
+               else {
+                  _next_primary_key = pk;
+                  _next_primary_key += 1;
+               }
+
             }
          }
 
@@ -1380,12 +1431,18 @@ class multi_index
        *  EOSIO_DISPATCH( addressbook, (myaction) )
        *  @endcode
        */
-      template<name::raw IndexName>
+      //template<name::raw IndexName>
+      template<uint64_t IndexNameV1, uint64_t IndexNameV2, uint64_t IndexNameV3, uint64_t IndexNameV4>
       auto get_index() {
          using namespace _multi_index_detail;
+         constexpr static name IndexName = name(IndexNameV1, IndexNameV2, IndexNameV3, IndexNameV4);
 
          auto res = hana::find_if( _indices, []( auto&& in ) {
-            return std::integral_constant<bool, static_cast<uint64_t>(std::decay<typename decltype(+hana::at_c<0>(in))::type>::type::index_name) == static_cast<uint64_t>(IndexName)>();
+            //return std::integral_constant<bool, static_cast<uint64_t>(std::decay<typename decltype(+hana::at_c<0>(in))::type>::type::index_name) == static_cast<uint64_t>(IndexName)>();
+            return std::integral_constant<bool, (static_cast<uint64_t>(std::decay<typename decltype(+hana::at_c<0>(in))::type>::type::index_name_v1) == static_cast<uint64_t>(IndexNameV1)
+                                              && static_cast<uint64_t>(std::decay<typename decltype(+hana::at_c<0>(in))::type>::type::index_name_v2) == static_cast<uint64_t>(IndexNameV2)
+                                              && static_cast<uint64_t>(std::decay<typename decltype(+hana::at_c<0>(in))::type>::type::index_name_v3) == static_cast<uint64_t>(IndexNameV3)
+                                              && static_cast<uint64_t>(std::decay<typename decltype(+hana::at_c<0>(in))::type>::type::index_name_v4) == static_cast<uint64_t>(IndexNameV4)) >();
          });
 
          static_assert( res != hana::nothing, "name provided is not the name of any secondary index within multi_index" );
@@ -1431,12 +1488,22 @@ class multi_index
        *  EOSIO_DISPATCH( addressbook, (myaction) )
        *  @endcode
        */
-      template<name::raw IndexName>
+      //template<name::raw IndexName>
+      template<uint64_t IndexNameV1, uint64_t IndexNameV2, uint64_t IndexNameV3, uint64_t IndexNameV4>
       auto get_index()const {
          using namespace _multi_index_detail;
+         constexpr static uint64_t index_name_v1 = IndexNameV1;
+         constexpr static uint64_t index_name_v2 = IndexNameV2;
+         constexpr static uint64_t index_name_v3 = IndexNameV3;
+         constexpr static uint64_t index_name_v4 = IndexNameV4;
+         constexpr static name IndexName = name(IndexNameV1, IndexNameV2, IndexNameV3, IndexNameV4);
 
          auto res = hana::find_if( _indices, []( auto&& in ) {
-            return std::integral_constant<bool, static_cast<uint64_t>(std::decay<typename decltype(+hana::at_c<1>(in))::type>::type::index_name) == static_cast<uint64_t>(IndexName)>();
+            //return std::integral_constant<bool, static_cast<uint64_t>(std::decay<typename decltype(+hana::at_c<1>(in))::type>::type::index_name) == static_cast<uint64_t>(IndexName)>();
+            return std::integral_constant<bool, (static_cast<uint64_t>(std::decay<typename decltype(+hana::at_c<1>(in))::type>::type::index_name_v1) == static_cast<uint64_t>(IndexNameV1)
+                                              && static_cast<uint64_t>(std::decay<typename decltype(+hana::at_c<1>(in))::type>::type::index_name_v2) == static_cast<uint64_t>(IndexNameV2)
+                                              && static_cast<uint64_t>(std::decay<typename decltype(+hana::at_c<1>(in))::type>::type::index_name_v3) == static_cast<uint64_t>(IndexNameV3)
+                                              && static_cast<uint64_t>(std::decay<typename decltype(+hana::at_c<1>(in))::type>::type::index_name_v4) == static_cast<uint64_t>(IndexNameV4))>();
          });
 
          static_assert( res != hana::nothing, "name provided is not the name of any secondary index within multi_index" );
@@ -1541,14 +1608,22 @@ class multi_index
 
             auto pk = obj.primary_key();
 
-            i.__primary_itr = internal_use_do_not_use::db_store_i64( _scope, static_cast<uint64_t>(TableName), payer.value, pk, buffer, size );
+            //i.__primary_itr = internal_use_do_not_use::db_store_i64( _scope, static_cast<uint64_t>(TableName), payer.value, pk, buffer, size );
+            i.__primary_itr = internal_use_do_not_use::db_store_i64( _scope, &TableName.value.cvalue, payer.value, pk, buffer, size );
 
             if ( max_stack_buffer_size < size ) {
                free(buffer);
             }
 
-            if( pk >= _next_primary_key )
-               _next_primary_key = (pk >= no_available_primary_key) ? no_available_primary_key : (pk + 1);
+            if( pk >= _next_primary_key ) {
+               //_next_primary_key = (pk >= no_available_primary_key) ? no_available_primary_key : (pk + 1);
+               if (pk >= no_available_primary_key) {
+                  _next_primary_key = no_available_primary_key;
+               } else {
+                  _next_primary_key = pk;
+                  _next_primary_key += 1;
+               }
+            }
 
             hana::for_each( _indices, [&]( auto& idx ) {
                typedef typename decltype(+hana::at_c<0>(idx))::type index_type;
@@ -1689,8 +1764,15 @@ class multi_index
             free( buffer );
          }
 
-         if( pk >= _next_primary_key )
-            _next_primary_key = (pk >= no_available_primary_key) ? no_available_primary_key : (pk + 1);
+         if( pk >= _next_primary_key ) {
+            //_next_primary_key = (pk >= no_available_primary_key) ? no_available_primary_key : (pk + 1);
+            if (pk >= no_available_primary_key) {
+			   _next_primary_key = no_available_primary_key;
+            } else {
+               _next_primary_key = pk;
+               _next_primary_key += 1;
+            }
+         }
 
          hana::for_each( _indices, [&]( auto& idx ) {
             typedef typename decltype(+hana::at_c<0>(idx))::type index_type;
@@ -1735,7 +1817,7 @@ class multi_index
        *  EOSIO_DISPATCH( addressbook, (myaction) )
        *  @endcode
        */
-      const T& get( uint64_t primary, const char* error_msg = "unable to find key" )const {
+      const T& get( uint256_t primary, const char* error_msg = "unable to find key" )const {
          auto result = find( primary );
          eosio::check( result != cend(), error_msg );
          return *result;
@@ -1765,13 +1847,18 @@ class multi_index
        *  @endcode
        */
       const_iterator find( uint64_t primary )const {
+          uint256_t _primary = primary;
+          return find(_primary);
+       }
+      const_iterator find( uint256_t primary )const {
          auto itr2 = std::find_if(_items_vector.rbegin(), _items_vector.rend(), [&](const item_ptr& ptr) {
             return ptr._item->primary_key() == primary;
          });
          if( itr2 != _items_vector.rend() )
             return iterator_to(*(itr2->_item));
 
-         auto itr = internal_use_do_not_use::db_find_i64( _code.value, _scope, static_cast<uint64_t>(TableName), primary );
+         //auto itr = internal_use_do_not_use::db_find_i64( _code.value, _scope, static_cast<uint64_t>(TableName), primary );
+         auto itr = internal_use_do_not_use::db_find_i64( &_code.value.cvalue, &_scope.cvalue, &TableName.value.cvalue, primary );
          if( itr < 0 ) return end();
 
          const item& i = load_object_by_primary_iterator( itr );
@@ -1787,14 +1874,15 @@ class multi_index
        *  @return An iterator to the found object which has a primary key equal to `primary` OR throws an exception if an object with primary key `primary` is not found.
        */
 
-      const_iterator require_find( uint64_t primary, const char* error_msg = "unable to find key" )const {
+      const_iterator require_find( uint256_t primary, const char* error_msg = "unable to find key" )const {
          auto itr2 = std::find_if(_items_vector.rbegin(), _items_vector.rend(), [&](const item_ptr& ptr) {
                return ptr._item->primary_key() == primary;
             });
          if( itr2 != _items_vector.rend() )
             return iterator_to(*(itr2->_item));
 
-         auto itr = internal_use_do_not_use::db_find_i64( _code.value, _scope, static_cast<uint64_t>(TableName), primary );
+         //auto itr = internal_use_do_not_use::db_find_i64( _code.value, _scope, static_cast<uint64_t>(TableName), primary );
+         auto itr = internal_use_do_not_use::db_find_i64( &_code.value.cvalue, &_scope.cvalue, &TableName.value.cvalue, primary );
          eosio::check( itr >= 0,  error_msg );
 
          const item& i = load_object_by_primary_iterator( itr );

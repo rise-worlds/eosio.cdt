@@ -17,13 +17,17 @@ namespace  eosio {
     *  @tparam SingletonName - the name of this singleton variable
     *  @tparam T - the type of the singleton
     */
-   template<name::raw SingletonName, typename T>
+   template<uint64_t SingletonNameV1, uint64_t SingletonNameV2, uint64_t SingletonNameV3, uint64_t SingletonNameV4, typename T>
    class singleton
    {
       /**
        * Primary key of the data inside singleton table
        */
-      constexpr static uint64_t pk_value = static_cast<uint64_t>(SingletonName);
+      constexpr static uint64_t single_name_v1 = static_cast<uint64_t>(SingletonNameV1);
+      constexpr static uint64_t single_name_v2 = static_cast<uint64_t>(SingletonNameV2);
+      constexpr static uint64_t single_name_v3 = static_cast<uint64_t>(SingletonNameV3);
+      constexpr static uint64_t single_name_v4 = static_cast<uint64_t>(SingletonNameV4);
+      constexpr static uint256_t pk_value = uint256_t(SingletonNameV1, SingletonNameV2, SingletonNameV3, SingletonNameV4);
 
       /**
        * Structure of data inside the singleton table
@@ -39,12 +43,12 @@ namespace  eosio {
           *
           * @return uint64_t - Primary Key
           */
-         uint64_t primary_key() const { return pk_value; }
+         uint256_t primary_key() const { return pk_value; }
 
          EOSLIB_SERIALIZE( row, (value) )
       };
 
-      typedef eosio::multi_index<SingletonName, row> table;
+      typedef eosio::multi_index<SingletonNameV1, SingletonNameV2, SingletonNameV3, SingletonNameV4, row> table;
 
       public:
 
@@ -54,7 +58,10 @@ namespace  eosio {
           * @param code - The table's owner
           * @param scope - The scope of the table
           */
-         singleton( name code, uint64_t scope ) : _t( code, scope ) {}
+         explicit singleton( name code, uint64_t scope ) : _t( code, scope ) {}
+         explicit singleton( name code, uint128_t scope ) : _t( code, scope ) {}
+         explicit singleton( name code, uint256_t scope ) : _t( code, scope ) {}
+         singleton( name code, name scope ) : _t( code, scope ) {}
 
          /**
           *  Check if the singleton table exists

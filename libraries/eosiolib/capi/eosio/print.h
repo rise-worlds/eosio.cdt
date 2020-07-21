@@ -160,7 +160,7 @@ void printqf(const long double* value);
  * @endcode
  */
 __attribute__((eosio_wasm_import))
-void printn( uint64_t name );
+void printn( const capi_name* name );
 
  /**
  * Prints hexidecimal data of length datalen

@@ -10,16 +10,16 @@ namespace eosio {
    namespace internal_use_do_not_use {
       extern "C" {
          __attribute__((eosio_wasm_import))
-         bool is_privileged( uint64_t account );
+         bool is_privileged( const capi_name* account );
 
          __attribute__((eosio_wasm_import))
-         void get_resource_limits( uint64_t account, int64_t* ram_bytes, int64_t* net_weight, int64_t* cpu_weight );
+         void get_resource_limits( const capi_name* account, int64_t* ram_bytes, int64_t* net_weight, int64_t* cpu_weight );
 
          __attribute__((eosio_wasm_import))
-         void set_resource_limits( uint64_t account, int64_t ram_bytes, int64_t net_weight, int64_t cpu_weight );
+         void set_resource_limits( const capi_name* account, int64_t ram_bytes, int64_t net_weight, int64_t cpu_weight );
 
          __attribute__((eosio_wasm_import))
-         void set_privileged( uint64_t account, bool is_priv );
+         void set_privileged( const capi_name* account, bool is_priv );
 
          __attribute__((eosio_wasm_import))
          void set_blockchain_parameters_packed( char* data, uint32_t datalen );
@@ -198,7 +198,7 @@ namespace eosio {
     *  @param cpu_weight - output to hold cpu limit
     */
    inline void get_resource_limits( name account, int64_t& ram_bytes, int64_t& net_weight, int64_t& cpu_weight ) {
-      internal_use_do_not_use::get_resource_limits( account.value, &ram_bytes, &net_weight, &cpu_weight );
+      internal_use_do_not_use::get_resource_limits( &account.value.cvalue, &ram_bytes, &net_weight, &cpu_weight );
    }
 
    /**
@@ -211,7 +211,7 @@ namespace eosio {
     *  @param cpu_weight - fractionally proportionate cpu limit of available resources based on (weight / total_weight_of_all_accounts)
     */
    inline void set_resource_limits( name account, int64_t ram_bytes, int64_t net_weight, int64_t cpu_weight ) {
-      internal_use_do_not_use::set_resource_limits( account.value, ram_bytes, net_weight, cpu_weight );
+      internal_use_do_not_use::set_resource_limits( &account.value.cvalue, ram_bytes, net_weight, cpu_weight );
    }
 
    /**
@@ -263,7 +263,7 @@ namespace eosio {
     *  @return false if the account is not privileged
     */
    inline bool is_privileged( name account ) {
-      return internal_use_do_not_use::is_privileged( account.value );
+      return internal_use_do_not_use::is_privileged( &account.value.cvalue );
    }
 
    /**
@@ -274,7 +274,7 @@ namespace eosio {
     *  @param is_priv - privileged status
     */
    inline void set_privileged( name account, bool is_priv ) {
-      internal_use_do_not_use::set_privileged( account.value, is_priv );
+      internal_use_do_not_use::set_privileged( &account.value.cvalue, is_priv );
    }
 
    /**

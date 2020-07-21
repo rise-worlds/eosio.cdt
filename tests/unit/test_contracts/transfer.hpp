@@ -20,7 +20,7 @@ CONTRACT transfer_contract : public contract {
          print_f("transfered : % -> % ? % (%)\n", from, to, quantity, memo);
       }
 
-      using transfer_action = action_wrapper<"transfer"_n, &transfer_contract::transfer>;
-      using transfer2_action = action_wrapper<"transfer2"_n, &transfer_contract::transfer2>;
-      using transfer3_action = action_wrapper<"transfer3"_n, &transfer_contract::transfer3>;
+      using transfer_action = action_wrapper<NT(transfer), &transfer_contract::transfer>;
+      using transfer2_action = action_wrapper<NT(transfer2), &transfer_contract::transfer2>;
+      using transfer3_action = action_wrapper<NT(transfer3), &transfer_contract::transfer3>;
 };

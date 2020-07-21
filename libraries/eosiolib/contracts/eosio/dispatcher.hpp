@@ -18,7 +18,7 @@ namespace eosio {
    /// @cond IMPLEMENTATIONS
 
    template<typename Contract, typename FirstAction>
-   bool dispatch( uint64_t code, uint64_t act ) {
+   bool dispatch( uint256_t code, uint256_t act ) {
       if( code == FirstAction::get_account() && FirstAction::get_name() == act ) {
          Contract().on( unpack_action_data<FirstAction>() );
          return true;
@@ -41,7 +41,7 @@ namespace eosio {
     *
     */
    template<typename Contract, typename FirstAction, typename SecondAction, typename... Actions>
-   bool dispatch( uint64_t code, uint64_t act ) {
+   bool dispatch( uint256_t code, uint256_t act ) {
       if( code == FirstAction::get_account() && FirstAction::get_name() == act ) {
          Contract().on( unpack_action_data<FirstAction>() );
          return true;
@@ -96,9 +96,10 @@ namespace eosio {
 
  // Helper macro for EOSIO_DISPATCH_INTERNAL
  #define EOSIO_DISPATCH_INTERNAL( r, OP, elem ) \
-    case eosio::name( BOOST_PP_STRINGIZE(elem) ).value: \
-       eosio::execute_action( eosio::name(receiver), eosio::name(code), &OP::elem ); \
-       break;
+   if (action == eosio::name( BOOST_PP_STRINGIZE(elem) )) { \
+      eosio::execute_action( eosio::name(receiver), eosio::name(code), &OP::elem ); \
+      return; \
+   }
 
  // Helper macro for EOSIO_DISPATCH
  #define EOSIO_DISPATCH_HELPER( TYPE,  MEMBERS ) \
@@ -122,11 +123,14 @@ namespace eosio {
 #define EOSIO_DISPATCH( TYPE, MEMBERS ) \
 extern "C" { \
    [[eosio::wasm_entry]] \
-   void apply( uint64_t receiver, uint64_t code, uint64_t action ) { \
+   void apply( uint64_t receiver0, uint64_t receiver1, uint64_t receiver2, uint64_t receiver3, \
+      uint64_t code0, uint64_t code1, uint64_t code2, uint64_t code3, \
+      uint64_t action0, uint64_t action1, uint64_t action2, uint64_t action3 ) { \
+      eosio::name receiver(receiver0, receiver1, receiver2, receiver3); \
+      eosio::name code(code0, code1, code2, code3); \
+      eosio::name action(action0, action1, action2, action3); \
       if( code == receiver ) { \
-         switch( action ) { \
-            EOSIO_DISPATCH_HELPER( TYPE, MEMBERS ) \
-         } \
+         EOSIO_DISPATCH_HELPER( TYPE, MEMBERS ) \
          /* does not allow destructor of thiscontract to run: eosio_exit(0); */ \
       } \
    } \

@@ -27,10 +27,10 @@ EOSIO_TEST_BEGIN(name_type_test)
    CHECK_EQUAL( name{1ULL}.value, 1ULL )
    CHECK_EQUAL( name{u64max}.value, u64max )
 
-   //// constexpr explicit name(name::raw)
-   CHECK_EQUAL( name{name::raw{0ULL}}.value, 0ULL )
-   CHECK_EQUAL( name{name::raw{1ULL}}.value, 1ULL )
-   CHECK_EQUAL( name{name::raw{u64max}}.value, u64max )
+//   //// constexpr explicit name(name::raw)
+//   CHECK_EQUAL( name{name::raw{0ULL}}.value, 0ULL )
+//   CHECK_EQUAL( name{name::raw{1ULL}}.value, 1ULL )
+//   CHECK_EQUAL( name{name::raw{u64max}}.value, u64max )
 
    //// constexpr explicit name(string_view)
    // Note:
@@ -130,33 +130,33 @@ EOSIO_TEST_BEGIN(name_type_test)
    CHECK_EQUAL( name{"e.o.s.i.o.a.c"}.suffix(), name{"c"} )
    CHECK_EQUAL( name{"eos.ioa.cco"}.suffix(), name{"cco"} )
 
-   // -----------------------------
-   // constexpr operator raw()const
-   CHECK_EQUAL( name{"1"}.operator name::raw(), static_cast<name::raw>(576460752303423488ULL) )
-   CHECK_EQUAL( name{"5"}.operator name::raw(), static_cast<name::raw>(2882303761517117440ULL) )
-   CHECK_EQUAL( name{"a"}.operator name::raw(), static_cast<name::raw>(3458764513820540928ULL) )
-   CHECK_EQUAL( name{"z"}.operator name::raw(), static_cast<name::raw>(17870283321406128128ULL) )
-
-   CHECK_EQUAL( name{"abc"}.operator name::raw(), static_cast<name::raw>(3589368903014285312ULL) )
-   CHECK_EQUAL( name{"123"}.operator name::raw(), static_cast<name::raw>(614178399182651392ULL) )
-
-   CHECK_EQUAL( name{".abc"}.operator name::raw(), static_cast<name::raw>(112167778219196416ULL) )
-   CHECK_EQUAL( name{".........abc"}.operator name::raw(), static_cast<name::raw>(102016ULL) )
-   CHECK_EQUAL( name{"123."}.operator name::raw(), static_cast<name::raw>(614178399182651392ULL) )
-   CHECK_EQUAL( name{"123........."}.operator name::raw(), static_cast<name::raw>(614178399182651392ULL) )
-   CHECK_EQUAL( name{".a.b.c.1.2.3."}.operator name::raw(), static_cast<name::raw>(108209673814966320ULL) )
-
-   CHECK_EQUAL( name{"abc.123"}.operator name::raw(), static_cast<name::raw>(3589369488740450304ULL) )
-   CHECK_EQUAL( name{"123.abc"}.operator name::raw(), static_cast<name::raw>(614181822271586304ULL) )
-
-   CHECK_EQUAL( name{"12345abcdefgj"}.operator name::raw(), static_cast<name::raw>(614251623682315983ULL) )
-   CHECK_EQUAL( name{"hijklmnopqrsj"}.operator name::raw(), static_cast<name::raw>(7754926748989239183ULL) )
-   CHECK_EQUAL( name{"tuvwxyz.1234j"}.operator name::raw(), static_cast<name::raw>(14895601873741973071ULL) )
-
-   CHECK_EQUAL( name{"111111111111j"}.operator name::raw(), static_cast<name::raw>(595056260442243615ULL) )
-   CHECK_EQUAL( name{"555555555555j"}.operator name::raw(), static_cast<name::raw>(2975281302211218015ULL) )
-   CHECK_EQUAL( name{"aaaaaaaaaaaaj"}.operator name::raw(), static_cast<name::raw>(3570337562653461615ULL) )
-   CHECK_EQUAL( name{"zzzzzzzzzzzzj"}.operator name::raw(), static_cast<name::raw>(u64max) )
+//   // -----------------------------
+//   // constexpr operator raw()const
+//   CHECK_EQUAL( name{"1"}.operator name::raw(), static_cast<name::raw>(576460752303423488ULL) )
+//   CHECK_EQUAL( name{"5"}.operator name::raw(), static_cast<name::raw>(2882303761517117440ULL) )
+//   CHECK_EQUAL( name{"a"}.operator name::raw(), static_cast<name::raw>(3458764513820540928ULL) )
+//   CHECK_EQUAL( name{"z"}.operator name::raw(), static_cast<name::raw>(17870283321406128128ULL) )
+//
+//   CHECK_EQUAL( name{"abc"}.operator name::raw(), static_cast<name::raw>(3589368903014285312ULL) )
+//   CHECK_EQUAL( name{"123"}.operator name::raw(), static_cast<name::raw>(614178399182651392ULL) )
+//
+//   CHECK_EQUAL( name{".abc"}.operator name::raw(), static_cast<name::raw>(112167778219196416ULL) )
+//   CHECK_EQUAL( name{".........abc"}.operator name::raw(), static_cast<name::raw>(102016ULL) )
+//   CHECK_EQUAL( name{"123."}.operator name::raw(), static_cast<name::raw>(614178399182651392ULL) )
+//   CHECK_EQUAL( name{"123........."}.operator name::raw(), static_cast<name::raw>(614178399182651392ULL) )
+//   CHECK_EQUAL( name{".a.b.c.1.2.3."}.operator name::raw(), static_cast<name::raw>(108209673814966320ULL) )
+//
+//   CHECK_EQUAL( name{"abc.123"}.operator name::raw(), static_cast<name::raw>(3589369488740450304ULL) )
+//   CHECK_EQUAL( name{"123.abc"}.operator name::raw(), static_cast<name::raw>(614181822271586304ULL) )
+//
+//   CHECK_EQUAL( name{"12345abcdefgj"}.operator name::raw(), static_cast<name::raw>(614251623682315983ULL) )
+//   CHECK_EQUAL( name{"hijklmnopqrsj"}.operator name::raw(), static_cast<name::raw>(7754926748989239183ULL) )
+//   CHECK_EQUAL( name{"tuvwxyz.1234j"}.operator name::raw(), static_cast<name::raw>(14895601873741973071ULL) )
+//
+//   CHECK_EQUAL( name{"111111111111j"}.operator name::raw(), static_cast<name::raw>(595056260442243615ULL) )
+//   CHECK_EQUAL( name{"555555555555j"}.operator name::raw(), static_cast<name::raw>(2975281302211218015ULL) )
+//   CHECK_EQUAL( name{"aaaaaaaaaaaaj"}.operator name::raw(), static_cast<name::raw>(3570337562653461615ULL) )
+//   CHECK_EQUAL( name{"zzzzzzzzzzzzj"}.operator name::raw(), static_cast<name::raw>(u64max) )
 
    // ---------------------------------------
    // constexpr explicit operator bool()const

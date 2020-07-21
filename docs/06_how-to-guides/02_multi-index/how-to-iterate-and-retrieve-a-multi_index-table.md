@@ -39,14 +39,14 @@ class [[eosio::contract]] multi_index_example : public contract {
       // the multi index type definition, for ease of use define a type alias `test_tables`, 
       // based on the multi_index template type, parametarized with a random name and 
       // the test_table data structure
-      typedef eosio::multi_index<"testtaba"_n, test_table> test_tables;
+      typedef eosio::multi_index<NT(testtaba), test_table> test_tables;
 
       // the multi index table instance declared as a data member of type test_tables
       test_tables testtab;
 
       [[eosio::action]] void set( name user );
 
-      using set_action = action_wrapper<"set"_n, &multi_index_example::set>;
+      using set_action = action_wrapper<NT(set), &multi_index_example::set>;
 };
 ```
 
@@ -61,7 +61,7 @@ The steps below show how to iterate and retrieve a multi index table.
 ```diff
 [[eosio::action]] void print( name user );
 
-+using print_action = action_wrapper<"print"_n, &multi_index_example::print>;
++using print_action = action_wrapper<NT(print), &multi_index_example::print>;
 ```
 3. Implement the action code, by searching for the `user` name in the multi index table using the primary index. If found, print out the value stored in that row for field `datum`. Otherwise asserts with a custom message. In the contract definition add the following implementation for `print` action:
 ```cpp
@@ -110,7 +110,7 @@ class [[eosio::contract]] multi_index_example : public contract {
       // the multi index type definition, for ease of use define a type alias `test_tables`, 
       // based on the multi_index template type, parametarized with a random name and 
       // the test_table data structure
-      typedef eosio::multi_index<"testtaba"_n, test_table> test_tables;
+      typedef eosio::multi_index<NT(testtaba), test_table> test_tables;
 
       // the multi index table instance declared as a data member of type test_tables
       test_tables testtab;
@@ -118,8 +118,8 @@ class [[eosio::contract]] multi_index_example : public contract {
       [[eosio::action]] void set( name user );
       [[eosio::action]] void print( name user );
 
-      using set_action = action_wrapper<"set"_n, &multi_index_example::set>;
-      using print_action = action_wrapper<"print"_n, &multi_index_example::print>;
+      using set_action = action_wrapper<NT(set), &multi_index_example::set>;
+      using print_action = action_wrapper<NT(print), &multi_index_example::print>;
 };
 ```
 

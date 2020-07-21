@@ -91,7 +91,7 @@ bool is_feature_activated( const capi_checksum256* feature_digest );
  * @return name of account that sent the current inline action (empty name if not called from inline action)
  */
 __attribute__((eosio_wasm_import))
-capi_name get_sender();
+void get_sender( capi_name* sender );
 
 #ifdef __cplusplus
 }

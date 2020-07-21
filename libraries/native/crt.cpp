@@ -135,8 +135,8 @@ extern "C" {
             int* tmp = (int*)v;
             printf("0x%04x%04x%04x%04x", tmp[0], tmp[1], tmp[2], tmp[3]);
          });
-      intrinsics::set_intrinsic<intrinsics::printn>([](uint64_t nm) {
-            std::string s = eosio::name(nm).to_string();
+      intrinsics::set_intrinsic<intrinsics::printn>([](const capi_name* nm) {
+            std::string s = eosio::name(*nm).to_string();
             prints_l(s.c_str(), s.length());
          });
       intrinsics::set_intrinsic<intrinsics::printhex>([](const void* data, uint32_t len) {

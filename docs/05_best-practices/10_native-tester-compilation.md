@@ -20,7 +20,7 @@ class [[eosio::contract]] hello : public eosio::contract {
       [[eosio::action]] void hi( name user );
 
       // accessor for external contracts to easily send inline actions to your contract
-      using hi_action = action_wrapper<"hi"_n, &hello::hi>;
+      using hi_action = action_wrapper<NT(hi), &hello::hi>;
 };
 ```
 

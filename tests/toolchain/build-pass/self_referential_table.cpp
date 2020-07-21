@@ -12,7 +12,7 @@ CONTRACT self_referential_table : public contract {
       using contract::contract;
 
       ACTION hi( name nm );
-      using hi_action = action_wrapper<"hi"_n, &self_referential_table::hi>;
+      using hi_action = action_wrapper<NT(hi), &self_referential_table::hi>;
 
    private:
 

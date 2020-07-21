@@ -27,19 +27,19 @@ namespace eosio {
          uint32_t action_data_size();
 
          __attribute__((eosio_wasm_import))
-         void require_recipient( uint64_t name );
+         void require_recipient( const capi_name* name );
 
          __attribute__((eosio_wasm_import))
-         void require_auth( uint64_t name );
+         void require_auth( const capi_name* name );
 
          __attribute__((eosio_wasm_import))
-         bool has_auth( uint64_t name );
+         bool has_auth( const capi_name* name );
 
          __attribute__((eosio_wasm_import))
-         void require_auth2( uint64_t name, uint64_t permission );
+         void require_auth2( const capi_name* name, const capi_name* permission );
 
          __attribute__((eosio_wasm_import))
-         bool is_account( uint64_t name );
+         bool is_account( const capi_name* name );
 
          __attribute__((eosio_wasm_import))
          void send_inline(char *serialized_action, size_t size);
@@ -51,7 +51,7 @@ namespace eosio {
          uint64_t  publication_time();
 
          __attribute__((eosio_wasm_import))
-         uint64_t current_receiver();
+         void current_receiver( capi_name* account );
       }
    };
 
@@ -96,7 +96,7 @@ namespace eosio {
     *  @param notify_account - name of the account to be verified
     */
    inline void require_recipient( name notify_account ){
-      internal_use_do_not_use::require_recipient( notify_account.value );
+      internal_use_do_not_use::require_recipient( &notify_account.value.cvalue );
    }
 
    /**
@@ -118,7 +118,7 @@ namespace eosio {
     */
    template<typename... accounts>
    void require_recipient( name notify_account, accounts... remaining_accounts ){
-      internal_use_do_not_use::require_recipient( notify_account.value );
+      internal_use_do_not_use::require_recipient( &notify_account.value.cvalue );
       require_recipient( remaining_accounts... );
    }
 
@@ -129,7 +129,7 @@ namespace eosio {
     *  @param name - name of the account to be verified
     */
    inline void require_auth( name n ) {
-      internal_use_do_not_use::require_auth( n.value );
+      internal_use_do_not_use::require_auth( &n.value.cvalue );
    }
 
    /**
@@ -147,7 +147,9 @@ namespace eosio {
    *  @return the account which specifies the current receiver of the action
    */
    inline name current_receiver() {
-     return name{internal_use_do_not_use::current_receiver()};
+     capi_name account = { 0 };
+     internal_use_do_not_use::current_receiver(&account);
+     return name{account};
    }
 
    /**
@@ -235,7 +237,7 @@ namespace eosio {
     *  @param level - Authorization to be required
     */
    inline void require_auth( const permission_level& level ) {
-      internal_use_do_not_use::require_auth2( level.actor.value, level.permission.value );
+      internal_use_do_not_use::require_auth2( &level.actor.value.cvalue, &level.permission.value.cvalue );
    }
 
    /**
@@ -245,7 +247,7 @@ namespace eosio {
     *  @param n - name of the account to be verified
     */
    inline bool has_auth( name n ) {
-      return internal_use_do_not_use::has_auth( n.value );
+      return internal_use_do_not_use::has_auth( &n.value.cvalue );
    }
 
    /**
@@ -255,7 +257,7 @@ namespace eosio {
     *  @param n - name of the account to check
     */
    inline bool is_account( name n ) {
-      return internal_use_do_not_use::is_account( n.value );
+      return internal_use_do_not_use::is_account( &n.value.cvalue );
    }
 
    /**
@@ -439,7 +441,7 @@ namespace eosio {
     * Example:
     * @code
     * // defined by contract writer of the actions
-    * using transfer_act = action_wrapper<"transfer"_n, &token::transfer>;
+    * using transfer_act = action_wrapper<NT(transfer), &token::transfer>;
     * // usage by different contract writer
     * transfer_act{"eosio.token"_n, {st.issuer, "active"_n}}.send(st.issuer, to, quantity, memo);
     * // or
@@ -447,7 +449,8 @@ namespace eosio {
     * trans_action.send(st.issuer, to, quantity, memo);
     * @endcode
     */
-   template <eosio::name::raw Name, auto Action>
+   //template <eosio::name::raw Name, auto Action>
+   template <uint64_t NameV1, uint64_t NameV2, uint64_t NameV3, uint64_t NameV4, auto Action>
    struct action_wrapper {
       template <typename Code>
       constexpr action_wrapper(Code&& code, std::vector<eosio::permission_level>&& perms)
@@ -469,7 +472,8 @@ namespace eosio {
       constexpr action_wrapper(Code&& code)
          : code_name(std::forward<Code>(code)) {}
 
-      static constexpr eosio::name action_name = eosio::name(Name);
+      //static constexpr eosio::name action_name = eosio::name(Name);
+      static constexpr eosio::name action_name = eosio::name(NameV1, NameV2, NameV3, NameV4);
       eosio::name code_name;
       std::vector<eosio::permission_level> permissions;
 
@@ -494,7 +498,8 @@ namespace eosio {
 
    };
 
-   template <eosio::name::raw Name, auto... Actions>
+   //template <eosio::name::raw Name, auto... Actions>
+   template <uint64_t NameV1, uint64_t NameV2, uint64_t NameV3, uint64_t NameV4, auto... Actions>
    struct variant_action_wrapper {
       template <typename Code>
       constexpr variant_action_wrapper(Code&& code, std::vector<eosio::permission_level>&& perms)
@@ -512,7 +517,8 @@ namespace eosio {
       constexpr variant_action_wrapper(Code&& code, const eosio::permission_level& perm)
          : code_name(std::forward<Code>(code)), permissions({1, perm}) {}
 
-      static constexpr eosio::name action_name = eosio::name(Name);
+      //static constexpr eosio::name action_name = eosio::name(Name);
+      static constexpr eosio::name action_name = eosio::name(NameV1, NameV2, NameV3, NameV4);
       eosio::name code_name;
       std::vector<eosio::permission_level> permissions;
 
@@ -548,12 +554,16 @@ namespace eosio {
       action( perms, code, act, std::move(args) ).send();
    }
 
-   template<typename, name::raw>
+   //template<typename, name::raw>
+   template<typename, uint64_t NameV1, uint64_t NameV2, uint64_t NameV3, uint64_t NameV4>
    struct inline_dispatcher;
 
 
-   template<typename T, name::raw Name, typename... Args>
-   struct inline_dispatcher<void(T::*)(Args...), Name> {
+   //template<typename T, name::raw Name, typename... Args>
+   //struct inline_dispatcher<void(T::*)(Args...), Name> {
+   template<typename T, uint64_t NameV1, uint64_t NameV2, uint64_t NameV3, uint64_t NameV4, typename... Args>
+   struct inline_dispatcher<void(T::*)(Args...), NameV1, NameV2, NameV3, NameV4> {
+      static constexpr name Name = name(NameV1, NameV2, NameV3, NameV4);
       static void call(name code, const permission_level& perm, std::tuple<Args...> args) {
          dispatch_inline(code, name(Name), std::vector<permission_level>(1, perm), std::move(args));
       }
@@ -565,7 +575,7 @@ namespace eosio {
 } // namespace eosio
 
 #define INLINE_ACTION_SENDER3( CONTRACT_CLASS, FUNCTION_NAME, ACTION_NAME  )\
-::eosio::inline_dispatcher<decltype(&CONTRACT_CLASS::FUNCTION_NAME), ACTION_NAME>::call
+::eosio::inline_dispatcher<decltype(&CONTRACT_CLASS::FUNCTION_NAME), NT(ACTION_NAME)>::call
 
 #define INLINE_ACTION_SENDER2( CONTRACT_CLASS, NAME )\
 INLINE_ACTION_SENDER3( CONTRACT_CLASS, NAME, ::eosio::name(#NAME) )

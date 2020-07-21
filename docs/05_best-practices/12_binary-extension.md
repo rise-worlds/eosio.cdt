@@ -51,9 +51,9 @@ public:
       uint64_t secondary_key() const { return _secondary_key.value; }
    };
 
-   using index1 = eosio::indexed_by<"index1"_n, eosio::const_mem_fun<structure, uint64_t, &structure::primary_key>>;
-   using index2 = eosio::indexed_by<"index2"_n, eosio::const_mem_fun<structure, uint64_t, &structure::secondary_key>>;
-   using table  = eosio::multi_index<"table"_n, structure, index1, index2>;
+   using index1 = eosio::indexed_by<NT(index1), eosio::const_mem_fun<structure, uint64_t, &structure::primary_key>>;
+   using index2 = eosio::indexed_by<NT(index2), eosio::const_mem_fun<structure, uint64_t, &structure::secondary_key>>;
+   using table  = eosio::multi_index<NT(table), structure, index1, index2>;
 
 private:
    table _table;

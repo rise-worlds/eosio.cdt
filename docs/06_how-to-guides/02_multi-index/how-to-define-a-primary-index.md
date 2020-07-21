@@ -52,7 +52,7 @@ using namespace eosio;
     uint64_t primary_key( ) const { return test_primary.value; }
   };
   
-+  typedef eosio::multi_index<"testtaba"_n, test_table> test_tables;
++  typedef eosio::multi_index<NT(testtaba), test_table> test_tables;
 ```
 
 Declare the multi index table as a data member of type `test_tables`, as defined above.
@@ -67,7 +67,7 @@ Declare the multi index table as a data member of type `test_tables`, as defined
     uint64_t primary_key( ) const { return test_primary.value; }
   };
   
-  typedef eosio::multi_index<"testtaba"_n, test_table> test_tables;
+  typedef eosio::multi_index<NT(testtaba), test_table> test_tables;
 +  test_tables testtab;
 ```
 

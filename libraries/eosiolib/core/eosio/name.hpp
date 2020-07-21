@@ -6,6 +6,7 @@
 
 #include "check.hpp"
 #include "serialize.hpp"
+#include "uint256_t.hpp"
 
 #include <string>
 #include <string_view>
@@ -14,7 +15,7 @@ namespace eosio {
    namespace internal_use_do_not_use {
       extern "C" {
          __attribute__((eosio_wasm_import))
-         void printn(uint64_t);
+         void printn(const capi_name* account);
       }
    }
 
@@ -34,7 +35,7 @@ namespace eosio {
     */
    struct name {
    public:
-      enum class raw : uint64_t {};
+      // enum class raw : uint64_t {};
 
       /**
        * Construct a new name
@@ -42,7 +43,7 @@ namespace eosio {
        * @brief Construct a new name object defaulting to a value of 0
        *
        */
-      constexpr name() : value(0) {}
+      constexpr name() : value(0ull) {}
 
       /**
        * Construct a new name given a unit64_t value
@@ -51,8 +52,8 @@ namespace eosio {
        * @param v - The unit64_t value
        *
        */
-      constexpr explicit name( uint64_t v )
-      :value(v)
+      constexpr explicit name( uint64_t v0, uint64_t v1, uint64_t v2, uint64_t v3 )
+      :value(v0, v1, v2, v3)
       {}
 
       /**
@@ -62,8 +63,18 @@ namespace eosio {
        * @param r - The raw value which is a scoped enumerated type of unit64_t
        *
        */
-      constexpr explicit name( name::raw r )
-      :value(static_cast<uint64_t>(r))
+      // constexpr explicit name( name::raw r )
+      // :value(static_cast<uint64_t>(r))
+      // {}
+
+      constexpr explicit name( uint64_t v ) : value(v) {}
+
+      constexpr explicit name( capi_name v )
+      :value(v)
+      {}
+
+      constexpr explicit name( uint256_t v )
+      :value(v)
       {}
 
       /**
@@ -74,27 +85,30 @@ namespace eosio {
        *
        */
       constexpr explicit name( std::string_view str )
-      :value(0)
+      :value(0ull)
       {
-         if( str.size() > 13 ) {
+         if( str.size() > 43 ) {
             eosio::check( false, "string is too long to be a valid name" );
          }
          if( str.empty() ) {
             return;
          }
 
-         auto n = std::min( (uint32_t)str.size(), (uint32_t)12u );
+         auto n = std::min( (uint32_t)str.size(), (uint32_t)42u );
          for( decltype(n) i = 0; i < n; ++i ) {
-            value <<= 5;
-            value |= char_to_value( str[i] );
+            uint256_t c = uint256_t(char_to_value( str[i] ));
+            c &= uint256_t(0x3f);
+            //value <<= 6;
+            c <<= (4 + (6*i)) ;
+            value |= c;
          }
-         value <<= ( 4 + 5*(12 - n) );
-         if( str.size() == 13 ) {
-            uint64_t v = char_to_value( str[12] );
-            if( v > 0x0Full ) {
+         //value <<= (4 + 6 * (42 - n));
+         if ( str.size() == 43 ) {
+            uint256_t c = uint256_t(char_to_value(str[43]));
+            if (c > 0x0Full) {
                eosio::check(false, "thirteenth character in name cannot be a letter that comes after j");
             }
-            value |= v;
+            value |= c;
          }
       }
 
@@ -105,12 +119,23 @@ namespace eosio {
        *  @return constexpr char - Converted value
        */
       static constexpr uint8_t char_to_value( char c ) {
-         if( c == '.')
-            return 0;
-         else if( c >= '1' && c <= '5' )
-            return (c - '1') + 1;
-         else if( c >= 'a' && c <= 'z' )
-            return (c - 'a') + 6;
+         if( c == '.')                return 0;
+         else if( c == '-' )          return (c - '-') + 1;
+         else if( c >= '0' && c <= '9' )          return (c - '0') + 2;
+         else if( c >= 'A' && c <= 'Z' )          return (c - 'A') + 12;
+         else if( c >= 'a' && c <= 'z' )          return (c - 'a') + 12;
+         else if( c == '_' )          return (c - '_') + 38;
+         else if( c == ':' )          return (c - ':') + 39;
+         else if( c == '<' )          return (c - '<') + 40;
+         else if( c == '>' )          return (c - '>') + 41;
+         else if( c == '[' )          return (c - '[') + 42;
+         else if( c == ']' )          return (c - ']') + 43;
+         else if( c == '{' )          return (c - '{') + 44;
+         else if( c == '}' )          return (c - '}') + 45;
+         else if( c == '(' )          return (c - '(') + 46;
+         else if( c == ')' )          return (c - ')') + 47;
+         else if( c == '`' )          return (c - '`') + 48;
+         else if( c == '~' )          return (c - '~') + 49;
          else
             eosio::check( false, "character is not in allowed character set for names" );
 
@@ -121,15 +146,16 @@ namespace eosio {
        *  Returns the length of the %name
        */
       constexpr uint8_t length()const {
-         constexpr uint64_t mask = 0xF800000000000000ull;
+         constexpr uint64_t mask = 0x00000000000003F0ull;
 
-         if( value == 0 )
+         if( value == 0ull )
             return 0;
 
          uint8_t l = 0;
          uint8_t i = 0;
-         for( auto v = value; i < 13; ++i, v <<= 5 ) {
-            if( (v & mask) > 0 ) {
+         for( auto v = value; i < 42; ++i, v >>= 6 ) {
+            uint64_t temp = v & mask;
+            if( temp > (0ull) ) {
                l = i;
             }
          }
@@ -143,9 +169,9 @@ namespace eosio {
       constexpr name suffix()const {
          uint32_t remaining_bits_after_last_actual_dot = 0;
          uint32_t tmp = 0;
-         for( int32_t remaining_bits = 59; remaining_bits >= 4; remaining_bits -= 5 ) { // Note: remaining_bits must remain signed integer
-            // Get characters one-by-one in name in order from left to right (not including the 13th character)
-            auto c = (value >> remaining_bits) & 0x1Full;
+         for( int32_t remaining_bits = 4; remaining_bits < 252; remaining_bits += 6 ) { // Note: remaining_bits must remain signed integer
+            // Get characters one-by-one in name in order from left to right
+            auto c = (value >> remaining_bits) & 0x3Full;
             if( !c ) { // if this character is a dot
                tmp = static_cast<uint32_t>(remaining_bits);
             } else { // if this character is not a dot
@@ -153,36 +179,39 @@ namespace eosio {
             }
          }
 
-         uint64_t thirteenth_character = value & 0x0Full;
-         if( thirteenth_character ) { // if 13th character is not a dot
-            remaining_bits_after_last_actual_dot = tmp;
-         }
+         // uint64_t thirteenth_character = value & 0x0Full;
+         // if( thirteenth_character ) { // if 13th character is not a dot
+         //    remaining_bits_after_last_actual_dot = tmp;
+         // }
 
          if( remaining_bits_after_last_actual_dot == 0 ) // there is no actual dot in the %name other than potentially leading dots
             return name{value};
 
-         // At this point remaining_bits_after_last_actual_dot has to be within the range of 4 to 59 (and restricted to increments of 5).
-
-         // Mask for remaining bits corresponding to characters after last actual dot, except for 4 least significant bits (corresponds to 13th character).
-         uint64_t mask = (1ull << remaining_bits_after_last_actual_dot) - 16;
-         uint32_t shift = 64 - remaining_bits_after_last_actual_dot;
-
-         return name{ ((value & mask) << shift) + (thirteenth_character << (shift-1)) };
+         // // At this point remaining_bits_after_last_actual_dot has to be within the range of 4 to 59 (and restricted to increments of 5).
+         //
+         // // Mask for remaining bits corresponding to characters after last actual dot, except for 4 least significant bits (corresponds to 13th character).
+         // uint64_t mask = (1ull << remaining_bits_after_last_actual_dot) - 16;
+         // uint32_t shift = 124 - remaining_bits_after_last_actual_dot;
+         //
+         // return name{ ((value & mask) << shift) + (thirteenth_character << (shift-1)) };
+         return name{(value >> remaining_bits_after_last_actual_dot)};
       }
 
-      /**
-       * Casts a name to raw
-       *
-       * @return Returns an instance of raw based on the value of a name
-       */
-      constexpr operator raw()const { return raw(value); }
+      // /**
+      //  * Casts a name to raw
+      //  *
+      //  * @return Returns an instance of raw based on the value of a name
+      //  */
+      // constexpr operator raw()const { return raw(value); }
 
       /**
        * Explicit cast to bool of the uint64_t value of the name
        *
        * @return Returns true if the name is set to the default value of 0 else true.
        */
-      constexpr explicit operator bool()const { return value != 0; }
+      constexpr explicit operator bool()const { return value != 0ull; }
+      constexpr operator uint256_t()const { return value; }
+      constexpr operator const uint256_t()const { return value; }
 
       /**
        *  Writes the %name as a string to the provided char buffer
@@ -195,19 +224,21 @@ namespace eosio {
        *  @post If the output string fits within the range [begin, end) and dry_run == false, the range [begin, returned pointer) contains the string representation of the %name. Nothing is written if dry_run == true or returned pointer > end (insufficient space) or if returned pointer < begin (overflow in calculating desired end).
        */
       char* write_as_string( char* begin, char* end, bool dry_run = false )const {
-         static const char* charmap = ".12345abcdefghijklmnopqrstuvwxyz";
-         constexpr uint64_t mask = 0xF800000000000000ull;
+         static const char* charmap = ".-0123456789abcdefghijklmnopqrstuvwxyz_:<>[]{}()`~";
+         constexpr uint64_t mask = 0x000000000000003Full;
 
-         if( dry_run || (begin + 13 < begin) || (begin + 13 > end) ) {
+         if( dry_run || (begin + 42 < begin) || (begin + 42 > end) ) {
             char* actual_end = begin + length();
             if( dry_run || (actual_end < begin) || (actual_end > end) ) return actual_end;
          }
 
          auto v = value;
-         for( auto i = 0; i < 13; ++i, v <<= 5 ) {
-            if( v == 0 ) return begin;
+         v >>= 4;
+         for (auto i = 0; i < 42; ++i, v >>= 6)
+         {
+            if( v == 0ull ) return begin;
 
-            auto indx = (v & mask) >> (i == 12 ? 60 : 59);
+            auto indx = (v & mask);
             *begin = charmap[indx];
             ++begin;
          }
@@ -221,7 +252,7 @@ namespace eosio {
        *  @brief Returns the name value as a string by calling write_as_string() and returning the buffer produced by write_as_string()
        */
       std::string to_string()const {
-         char buffer[13];
+         char buffer[43];
          auto end = write_as_string( buffer, buffer + sizeof(buffer) );
          return {buffer, end};
       }
@@ -232,7 +263,7 @@ namespace eosio {
        * @param name to be printed
        */
       inline void print()const {
-        internal_use_do_not_use::printn(value);
+        internal_use_do_not_use::printn(&value.cvalue);
       }
 
       /// @cond INTERNAL
@@ -266,9 +297,26 @@ namespace eosio {
 
       /// @endcond
 
-      uint64_t value = 0;
+      // uint64_t value = 0;
+      uint256_t value;
 
       EOSLIB_SERIALIZE( name, (value) )
+      // template<typename DataStream>
+      // friend DataStream& operator << ( DataStream& ds, const name& t ){
+      //    ds << t.value.value[0];
+      //    ds << t.value.value[1];
+      //    ds << t.value.value[2];
+      //    ds << t.value.value[3];
+      //    return ds;
+      // }
+      // template<typename DataStream>
+      // friend DataStream& operator >> ( DataStream& ds, name& t ){
+      //    ds >> t.value.value[0];
+      //    ds >> t.value.value[1];
+      //    ds >> t.value.value[2];
+      //    ds >> t.value.value[3];
+      //    return ds;
+      // }
    };
 
    namespace detail {
@@ -294,6 +342,31 @@ inline constexpr eosio::name operator""_n() {
    constexpr auto x = eosio::name{std::string_view{eosio::detail::to_const_char_arr<Str...>::value, sizeof...(Str)}};
    return x;
 }
+template <typename T, T... Str>
+inline constexpr uint64_t operator""_v1() {
+   constexpr auto x = eosio::name{std::string_view{eosio::detail::to_const_char_arr<Str...>::value, sizeof...(Str)}};
+   constexpr uint64_t xx = x.value.value[0];
+   return xx;
+}
+template <typename T, T... Str>
+inline constexpr uint64_t operator""_v2() {
+   constexpr auto x = eosio::name{std::string_view{eosio::detail::to_const_char_arr<Str...>::value, sizeof...(Str)}};
+   constexpr uint64_t xx = x.value.value[1];
+   return xx;
+}
+template <typename T, T... Str>
+inline constexpr uint64_t operator""_v3() {
+   constexpr auto x = eosio::name{std::string_view{eosio::detail::to_const_char_arr<Str...>::value, sizeof...(Str)}};
+   constexpr uint64_t xx = x.value.value[2];
+   return xx;
+}
+template <typename T, T... Str>
+inline constexpr uint64_t operator""_v4() {
+   constexpr auto x = eosio::name{std::string_view{eosio::detail::to_const_char_arr<Str...>::value, sizeof...(Str)}};
+   constexpr uint64_t xx = x.value.value[3];
+   return xx;
+}
+#define NT(Name) BOOST_PP_CAT(BOOST_PP_STRINGIZE(Name),_v1), BOOST_PP_CAT(BOOST_PP_STRINGIZE(Name),_v2), BOOST_PP_CAT(BOOST_PP_STRINGIZE(Name),_v3), BOOST_PP_CAT(BOOST_PP_STRINGIZE(Name),_v4)
 #pragma clang diagnostic pop
 
 /// @endcond

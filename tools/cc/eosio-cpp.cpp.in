@@ -98,10 +98,11 @@ namespace eosio { namespace cdt {
             }
 
             if (const clang::ClassTemplateSpecializationDecl* decl = res.Nodes.getNodeAs<clang::ClassTemplateSpecializationDecl>("eosio_tool")) {
-               if ( decl->getName() == "multi_index" ) {
-                  get_abigen_ref().add_table(decl->getTemplateArgs()[0].getAsIntegral().getExtValue(),
-                                          (clang::CXXRecordDecl*)((clang::RecordType*)decl->getTemplateArgs()[1].getAsType().getTypePtr())->getDecl());
-               }
+                if ( decl->getName() == "multi_index" ) {
+                    get_abigen_ref().add_table(decl->getTemplateArgs()[0].getAsIntegral().getExtValue(), decl->getTemplateArgs()[1].getAsIntegral().getExtValue(),
+                                               decl->getTemplateArgs()[2].getAsIntegral().getExtValue(), decl->getTemplateArgs()[3].getAsIntegral().getExtValue(),
+                                               (clang::CXXRecordDecl*)((clang::RecordType*)decl->getTemplateArgs()[4].getAsType().getTypePtr())->getDecl());
+                }
             }
          }
    };

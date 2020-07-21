@@ -50,8 +50,8 @@ check_transaction_authorization( const char* trx_data,     uint32_t trx_size,
  */
 __attribute__((eosio_wasm_import))
 int32_t
-check_permission_authorization( capi_name account,
-                                capi_name permission,
+check_permission_authorization( const capi_name* account,
+                                const capi_name* permission,
                                 const char* pubkeys_data, uint32_t pubkeys_size,
                                 const char* perms_data,   uint32_t perms_size,
                                 uint64_t delay_us
@@ -66,7 +66,7 @@ check_permission_authorization( capi_name account,
  *  @return the last used time (in microseconds since Unix epoch) of the permission
  */
 __attribute__((eosio_wasm_import))
-int64_t get_permission_last_used( capi_name account, capi_name permission );
+int64_t get_permission_last_used( const capi_name* account, const capi_name* permission );
 
 
 /**
@@ -77,7 +77,7 @@ int64_t get_permission_last_used( capi_name account, capi_name permission );
  *  @return the creation time (in microseconds since Unix epoch) of the account
  */
 __attribute__((eosio_wasm_import))
-int64_t get_account_creation_time( capi_name account );
+int64_t get_account_creation_time( const capi_name* account );
 
 #ifdef __cplusplus
 }

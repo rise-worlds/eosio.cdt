@@ -26,5 +26,5 @@ public:
       tuple<int, int> t;
       uint64_t primary_key() const { return id; }
    };
-   typedef multi_index<"greeting"_n, greeting> greeting_index;
+   typedef multi_index<NT(greeting), greeting> greeting_index;
 };

@@ -20,15 +20,15 @@ namespace eosio {
                                           const char*, uint32_t,
                                           const char*, uint32_t);
          __attribute__((eosio_wasm_import))
-         int32_t check_permission_authorization( uint64_t, uint64_t,
+         int32_t check_permission_authorization( const capi_name*, const capi_name*,
                                                  const char*, uint32_t,
                                                  const char*, uint32_t,
                                                  uint64_t);
          __attribute__((eosio_wasm_import))
-         int64_t get_permission_last_used(uint64_t, uint64_t);
+         int64_t get_permission_last_used(const capi_name*, const capi_name*);
 
          __attribute__((eosio_wasm_import))
-         int64_t get_account_creation_time(uint64_t);
+         int64_t get_account_creation_time(const capi_name*);
       }
    }
 
@@ -74,7 +74,7 @@ namespace eosio {
                                    microseconds delay ) {
       int64_t delay_us = delay.count();
       check(delay_us >= 0, "negative delay is not allowed");
-      return internal_use_do_not_use::check_permission_authorization( account.value, permission.value, pubkeys_data, pubkeys_size, perms_data, perms_size,  static_cast<uint64_t>(delay_us) );
+      return internal_use_do_not_use::check_permission_authorization( &account.value.cvalue, &permission.value.cvalue, pubkeys_data, pubkeys_size, perms_data, perms_size,  static_cast<uint64_t>(delay_us) );
    }
 
 
@@ -161,8 +161,8 @@ namespace eosio {
          packed_perms = pack(provided_permissions);
       }
 
-      auto res = internal_use_do_not_use::check_permission_authorization( account.value,
-                                                   permission.value,
+      auto res = internal_use_do_not_use::check_permission_authorization( &account.value.cvalue,
+                                                   &permission.value.cvalue,
                                                    (nkeys > 0)  ? packed_keys.data()  : (const char*)0,
                                                    (nkeys > 0)  ? packed_keys.size()  : 0,
                                                    (nperms > 0) ? packed_perms.data() : (const char*)0,
@@ -186,7 +186,7 @@ namespace eosio {
    time_point get_permission_last_used( name account, name permission ) {
       return time_point(
                microseconds(
-                  internal_use_do_not_use::get_permission_last_used(account.value, permission.value)));
+                  internal_use_do_not_use::get_permission_last_used(&account.value.cvalue, &permission.value.cvalue)));
 
    }
 
@@ -202,7 +202,7 @@ namespace eosio {
    time_point get_account_creation_time( name account ) {
       return time_point(
                microseconds(
-                  internal_use_do_not_use::get_account_creation_time(account.value)));
+                  internal_use_do_not_use::get_account_creation_time(&account.value.cvalue)));
 
    }
 }

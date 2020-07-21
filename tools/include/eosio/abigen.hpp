@@ -194,7 +194,7 @@ namespace eosio { namespace cdt {
       }
 
       std::string to_index_type( std::string t ) {
-         return "i64";
+         return "i256";
       }
 
       void add_table( const clang::CXXRecordDecl* decl ) {
@@ -215,12 +215,12 @@ namespace eosio { namespace cdt {
          ctables.insert(t);
       }
 
-      void add_table( uint64_t name, const clang::CXXRecordDecl* decl ) {
+      void add_table( uint64_t name_v0, uint64_t name_v1, uint64_t name_v2, uint64_t name_v3, const clang::CXXRecordDecl* decl ) {
          if (!(decl->isEosioTable() && abigen::is_eosio_contract(decl, get_contract_name())))
             return;
          abi_table t;
          t.type = decl->getNameAsString();
-         t.name = name_to_string(name);
+         t.name = name_to_string(name_v0, name_v1, name_v2, name_v3);
          _abi.tables.insert(t);
       }
 

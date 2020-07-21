@@ -36,6 +36,7 @@
 
 # Build
 build/*
+cmake-build-debug/
 
 # Python
 __pycache__/
@@ -43,3 +44,4 @@ __pycache__/
 
 # Editor Files
 .vscode/
+.idea/

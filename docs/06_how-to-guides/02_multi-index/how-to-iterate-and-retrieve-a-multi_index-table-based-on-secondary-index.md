@@ -40,7 +40,7 @@ class [[eosio::contract]] multi_index_example : public contract {
       // the multi index type definition, for ease of use define a type alias `test_tables`, 
       // based on the multi_index template type, parametarized with a random name, the 
       // test_table data structure, and the secondary index
-      typedef eosio::multi_index<"testtaba"_n, test_table, eosio::indexed_by<"secid"_n, eosio::const_mem_fun<test_table, uint64_t, &test_table::by_secondary>>> test_tables;
+      typedef eosio::multi_index<NT(testtaba), test_table, eosio::indexed_by<NT(secid), eosio::const_mem_fun<test_table, uint64_t, &test_table::by_secondary>>> test_tables;
 
       // the multi index table instance declared as a data member of type test_tables
       test_tables testtab;
@@ -48,8 +48,8 @@ class [[eosio::contract]] multi_index_example : public contract {
       [[eosio::action]] void set( name user );
       [[eosio::action]] void print( name user );
 
-      using set_action = action_wrapper<"set"_n, &multi_index_example::set>;
-      using print_action = action_wrapper<"print"_n, &multi_index_example::print>;
+      using set_action = action_wrapper<NT(set), &multi_index_example::set>;
+      using print_action = action_wrapper<NT(print), &multi_index_example::print>;
 };
 ```
 
@@ -60,7 +60,7 @@ To iterate and retreive the multi index table `testtab` defined in `multi_index_
 ```cpp
   [[eosio::action]] void bysec( name secid );
 
-  using bysec_action = action_wrapper<"bysec"_n, &multi_index_example::bysec>;
+  using bysec_action = action_wrapper<NT(bysec), &multi_index_example::bysec>;
 ```
 
 2. In the contract implementation add the new action implementation like this:
@@ -114,7 +114,7 @@ class [[eosio::contract]] multi_index_example : public contract {
       // the multi index type definition, for ease of use define a type alias `test_tables`, 
       // based on the multi_index template type, parametarized with a random name, the 
       // test_table data structure, and the secondary index
-      typedef eosio::multi_index<"testtaba"_n, test_table, eosio::indexed_by<"secid"_n, eosio::const_mem_fun<test_table, uint64_t, &test_table::by_secondary>>> test_tables;
+      typedef eosio::multi_index<NT(testtaba), test_table, eosio::indexed_by<NT(secid), eosio::const_mem_fun<test_table, uint64_t, &test_table::by_secondary>>> test_tables;
 
       // the multi index table instance declared as a data member of type test_tables
       test_tables testtab;
@@ -123,9 +123,9 @@ class [[eosio::contract]] multi_index_example : public contract {
       [[eosio::action]] void print( name user );
       [[eosio::action]] void bysec( name secid );
 
-      using set_action = action_wrapper<"set"_n, &multi_index_example::set>;
-      using print_action = action_wrapper<"print"_n, &multi_index_example::print>;
-      using bysec_action = action_wrapper<"bysec"_n, &multi_index_example::bysec>;
+      using set_action = action_wrapper<NT(set), &multi_index_example::set>;
+      using print_action = action_wrapper<NT(print), &multi_index_example::print>;
+      using bysec_action = action_wrapper<NT(bysec), &multi_index_example::bysec>;
 };
 ```
 

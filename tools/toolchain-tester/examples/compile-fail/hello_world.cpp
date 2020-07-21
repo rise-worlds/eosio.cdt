@@ -9,8 +9,8 @@ CONTRACT hello : public contract {
       ACTION hi( name nm );
       ACTION check( name nm );
 
-      using hi_action = action_wrapper<"hi"_n, &hello::hi>;
-      using check_action = action_wrapper<"check"_n, &hello::check>;
+      using hi_action = action_wrapper<NT(hi), &hello::hi>;
+      using check_action = action_wrapper<NT(check), &hello::check>;
 };
 
 ACTION hello::hi( name nm ) {

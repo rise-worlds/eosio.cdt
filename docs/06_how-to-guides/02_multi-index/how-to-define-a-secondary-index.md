@@ -37,8 +37,8 @@ The steps below show how to add a secondary index to the existing multi index ta
 3. In the `test_table` alias definition (typedef), add the definition of the secondary index by making use of the `eosio::indexed_by` template. `eosio::index_by` needs two parameters: the name of the index, `"secid"_n`, and a function call operator which extracts the value from the secondary data member as an index key. The function call operator is achieved by employing the `eosio::const_mem_fun` template which receives two parameters: the data structure `test_table` and the reference to the getter function member `by_secondary`.
 
 ```diff
--  typedef eosio::multi_index<"testtaba"_n, test_table> test_tables;
-+  typedef eosio::multi_index<"testtaba"_n, test_table, eosio::indexed_by<"secid"_n, eosio::const_mem_fun<test_table, uint64_t, &test_table::by_secondary>>> test_tables;
+-  typedef eosio::multi_index<NT(testtaba), test_table> test_tables;
++  typedef eosio::multi_index<NT(testtaba), test_table, eosio::indexed_by<NT(secid), eosio::const_mem_fun<test_table, uint64_t, &test_table::by_secondary>>> test_tables;
 ```
 
 The full contract definition code with all the changes described above could look like this:
@@ -75,7 +75,7 @@ class [[eosio::contract]] multi_index_example : public contract {
       // the multi index type definition, for ease of use a type alias `test_tables` is defined, 
       // based on the multi_index template type, parametarized with a random name, the 
       // test_table data structure, and the secondary index
-      typedef eosio::multi_index<"testtaba"_n, test_table, eosio::indexed_by<"secid"_n, eosio::const_mem_fun<test_table, uint64_t, &test_table::by_secondary>>> test_tables;
+      typedef eosio::multi_index<NT(testtaba), test_table, eosio::indexed_by<NT(secid), eosio::const_mem_fun<test_table, uint64_t, &test_table::by_secondary>>> test_tables;
 
       // the multi index table instance declared as a data member of type test_tables
       test_tables testtab;
@@ -83,8 +83,8 @@ class [[eosio::contract]] multi_index_example : public contract {
       [[eosio::action]] void set( name user );
       [[eosio::action]] void print( name user );
 
-      using set_action = action_wrapper<"set"_n, &multi_index_example::set>;
-      using print_action = action_wrapper<"print"_n, &multi_index_example::print>;
+      using set_action = action_wrapper<NT(set), &multi_index_example::set>;
+      using print_action = action_wrapper<NT(print), &multi_index_example::print>;
 };
 ```
 

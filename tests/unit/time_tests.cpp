@@ -368,7 +368,7 @@ EOSIO_TEST_END
 
 // Definitions in `eosio.cdt/libraries/eosio/time.hpp`
 EOSIO_TEST_BEGIN(block_timestamp_type_test)
-   static const int64_t bt_epoch{946684800000LL};
+   static const int64_t bt_epoch{1577880000000LL};
 
    static const microseconds ms0{bt_epoch*1000};
    static const microseconds ms1{bt_epoch*1000+500000};

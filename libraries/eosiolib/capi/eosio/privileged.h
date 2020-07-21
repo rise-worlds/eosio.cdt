@@ -19,7 +19,7 @@ extern "C" {
  * @param cpu_weight - pointer to `int64_t` to hold cpu limit
  */
 __attribute__((eosio_wasm_import))
-void get_resource_limits( capi_name account, int64_t* ram_bytes, int64_t* net_weight, int64_t* cpu_weight );
+void get_resource_limits( const capi_name* account, int64_t* ram_bytes, int64_t* net_weight, int64_t* cpu_weight );
 
 /**
  * Set the resource limits of an account
@@ -30,7 +30,7 @@ void get_resource_limits( capi_name account, int64_t* ram_bytes, int64_t* net_we
  * @param cpu_weight - fractionally proportionate cpu limit of available resources based on (weight / total_weight_of_all_accounts)
  */
 __attribute__((eosio_wasm_import))
-void set_resource_limits( capi_name account, int64_t ram_bytes, int64_t net_weight, int64_t cpu_weight );
+void set_resource_limits( const capi_name* account, int64_t ram_bytes, int64_t net_weight, int64_t cpu_weight );
 
 /**
  * Proposes a schedule change
@@ -77,7 +77,7 @@ int64_t enable_standby_producers();
  * @return false if the account is not privileged
  */
 __attribute__((eosio_wasm_import))
-bool is_privileged( capi_name account );
+bool is_privileged( const capi_name* account );
 
 /**
  * Set the privileged status of an account
@@ -86,7 +86,7 @@ bool is_privileged( capi_name account );
  * @param is_priv - privileged status
  */
 __attribute__((eosio_wasm_import))
-void set_privileged( capi_name account, bool is_priv );
+void set_privileged( const capi_name* account, bool is_priv );
 
 /**
  * Set the blockchain parameters

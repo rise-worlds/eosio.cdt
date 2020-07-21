@@ -6,7 +6,9 @@
 #include <utility>
 #include <string>
 
-
+extern "C" {
+   struct __attribute__((aligned (16))) capi_name;
+}
 
 namespace eosio {
    namespace internal_use_do_not_use {
@@ -39,7 +41,7 @@ namespace eosio {
          void printqf(const long double*);
 
          __attribute__((eosio_wasm_import))
-         void printn(uint64_t);
+         void printn(const capi_name*);
 
          __attribute__((eosio_wasm_import))
          void printhex(const void*, uint32_t);
